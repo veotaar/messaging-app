@@ -11,12 +11,12 @@ function Index() {
 
   if (!isAuthenticated) {
     return (
-      <div className="mx-auto max-w-screen-md bg-slate-950 p-2">
+      <div className="mx-auto max-w-screen-md p-2">
         <p>
-          <Link to="/login" className="underline underline-offset-8">
-            Login
+          <Link to="/register" className="underline underline-offset-8">
+            Register
           </Link>{' '}
-          to view posts.
+          to start messaging!
         </p>
       </div>
     );
