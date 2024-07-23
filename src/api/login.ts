@@ -43,3 +43,23 @@ export const registerUser = async (credentials: registerCredentials): Promise<lo
 
   return response.json();
 };
+
+export const loginUser = async (credentials: loginCredentials): Promise<loginRegisterResponse> => {
+  const url = `${BASE_URL}/login`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    mode: 'cors',
+    body: JSON.stringify(credentials),
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Response status: ${response.status}`);
+  }
+
+  return response.json();
+};

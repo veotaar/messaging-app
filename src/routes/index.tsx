@@ -23,7 +23,7 @@ function Index() {
   }
 
   return (
-    <div className="mx-auto max-w-screen-md overflow-hidden text-ellipsis whitespace-nowrap bg-slate-950 p-2">
+    <div className="mx-auto max-w-screen-md overflow-hidden text-ellipsis whitespace-nowrap p-2">
       <p>You are authenticated!</p>
     </div>
   );
