@@ -28,7 +28,7 @@ const RegisterForm = () => {
     },
   });
 
-  const { setUser, setToken, isAuthenticated } = useAuth();
+  const { setUser, setToken, isAuthenticated, setExpires } = useAuth();
   const navigate = useNavigate();
   const {
     mutate: loginMutate,
@@ -39,10 +39,15 @@ const RegisterForm = () => {
     onSuccess: (data) => {
       navigate({ to: '/' });
       const token = data.jwt?.token;
+      const expires = data.jwt?.expires;
       const user = data.user?.username;
-      if (token && user) {
+      if (token && user && expires) {
         setToken(token);
         setUser(user);
+        setExpires(expires);
+        localStorage.setItem('user', user);
+        localStorage.setItem('token', token);
+        localStorage.setItem('expires', expires.toString());
       }
     },
     onError: (error) => {

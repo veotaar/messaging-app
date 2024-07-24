@@ -13,8 +13,12 @@ function Index() {
     return (
       <div className="mx-auto max-w-screen-md p-2">
         <p>
+          <Link to="/login" className="underline underline-offset-8">
+            Login
+          </Link>{' '}
+          or{' '}
           <Link to="/register" className="underline underline-offset-8">
-            Register
+            create an account
           </Link>{' '}
           to start messaging!
         </p>

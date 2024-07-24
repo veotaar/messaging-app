@@ -20,7 +20,7 @@ export type loginRegisterResponse = {
   };
   jwt: {
     token: string;
-    expires: number;
+    expires: string;
   };
 };
 
