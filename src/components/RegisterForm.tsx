@@ -28,7 +28,7 @@ const RegisterForm = () => {
     },
   });
 
-  const { setUser, setToken, isAuthenticated, setExpires } = useAuth();
+  const { setUser, setToken, isAuthenticated, setExpires, setUserId } = useAuth();
   const navigate = useNavigate();
   const {
     mutate: loginMutate,
@@ -37,18 +37,21 @@ const RegisterForm = () => {
   } = useMutation({
     mutationFn: registerUser,
     onSuccess: (data) => {
-      navigate({ to: '/' });
       const token = data.jwt?.token;
       const expires = data.jwt?.expires;
       const user = data.user?.username;
+      const userId = data.user?._id;
       if (token && user && expires) {
         setToken(token);
         setUser(user);
         setExpires(expires);
+        setUserId(userId);
         localStorage.setItem('user', user);
         localStorage.setItem('token', token);
         localStorage.setItem('expires', expires.toString());
+        localStorage.setItem('userId', userId);
       }
+      setTimeout(() => navigate({ to: '/conversations' }), 0);
     },
     onError: (error) => {
       console.error(error);

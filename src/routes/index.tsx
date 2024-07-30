@@ -1,9 +1,20 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { useAuth } from '../lib/auth';
 import { Link } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/')({
   component: Index,
+  beforeLoad: ({ context, location }) => {
+    console.log(context);
+    if (context.auth.isAuthenticated) {
+      throw redirect({
+        to: '/conversations',
+        search: {
+          redirect: location.href,
+        },
+      });
+    }
+  },
 });
 
 function Index() {
@@ -28,7 +39,11 @@ function Index() {
 
   return (
     <div className="mx-auto max-w-screen-md overflow-hidden text-ellipsis whitespace-nowrap p-2">
-      <p>You are authenticated!</p>
+      <p>
+        <Link to="/conversations" className="underline underline-offset-8">
+          Go to your conversations!
+        </Link>
+      </p>
     </div>
   );
 }

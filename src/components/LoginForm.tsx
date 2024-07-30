@@ -15,7 +15,7 @@ const formSchema = z.object({
   password: z.string().min(8).max(64),
 });
 
-const RegisterForm = () => {
+const LoginForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -24,7 +24,7 @@ const RegisterForm = () => {
     },
   });
 
-  const { setUser, setToken, isAuthenticated, setExpires } = useAuth();
+  const { setUser, setToken, isAuthenticated, setExpires, setUserId } = useAuth();
   const navigate = useNavigate();
   const {
     mutate: loginMutate,
@@ -33,23 +33,27 @@ const RegisterForm = () => {
   } = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      navigate({ to: '/' });
       const token = data.jwt?.token;
       const expires = data.jwt?.expires;
       const user = data.user?.username;
+      const userId = data.user?._id;
       if (token && user && expires) {
         setToken(token);
         setUser(user);
         setExpires(expires);
+        setUserId(userId);
         localStorage.setItem('user', user);
         localStorage.setItem('token', token);
         localStorage.setItem('expires', expires.toString());
+        localStorage.setItem('userId', userId);
       }
+
+      setTimeout(() => navigate({ to: '/conversations' }), 0);
     },
     onError: (error) => {
       console.error(error);
-      form.reset();
-      form.setFocus('email');
+      form.resetField('password');
+      form.setFocus('password');
     },
   });
 
@@ -106,4 +110,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default LoginForm;
