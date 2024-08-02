@@ -1,6 +1,6 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import { createFileRoute, redirect, Outlet } from '@tanstack/react-router';
 import { conversationsQueryOptions } from '@/api/queryOptions';
-import { useAuth } from '@/lib/auth';
+import ChatList from '@/components/ChatList';
 
 export const Route = createFileRoute('/conversations')({
   beforeLoad: ({ context, location }) => {
@@ -22,21 +22,19 @@ export const Route = createFileRoute('/conversations')({
 
 function Conversations() {
   const loaderData = Route.useLoaderData();
-  const { userId } = useAuth();
 
   if (!loaderData) {
     return <p>loading your chats...</p>;
   }
 
   return (
-    <div>
-      {loaderData.conversations.map((conversation) => {
-        return (
-          <div key={conversation._id}>
-            <p>{conversation.participants.filter((user) => user._id !== userId).at(0)?.username}</p>
-          </div>
-        );
-      })}
+    <div className="flex">
+      <div>
+        <ChatList conversations={loaderData.conversations} />
+      </div>
+      <div>
+        <Outlet />
+      </div>
     </div>
   );
 }

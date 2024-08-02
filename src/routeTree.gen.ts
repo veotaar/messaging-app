@@ -15,6 +15,7 @@ import { Route as RegisterImport } from './routes/register'
 import { Route as LoginImport } from './routes/login'
 import { Route as ConversationsImport } from './routes/conversations'
 import { Route as IndexImport } from './routes/index'
+import { Route as ConversationsChatIdImport } from './routes/conversations.$chatId'
 
 // Create/Update Routes
 
@@ -36,6 +37,11 @@ const ConversationsRoute = ConversationsImport.update({
 const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const ConversationsChatIdRoute = ConversationsChatIdImport.update({
+  path: '/$chatId',
+  getParentRoute: () => ConversationsRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -70,6 +76,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterImport
       parentRoute: typeof rootRoute
     }
+    '/conversations/$chatId': {
+      id: '/conversations/$chatId'
+      path: '/$chatId'
+      fullPath: '/conversations/$chatId'
+      preLoaderRoute: typeof ConversationsChatIdImport
+      parentRoute: typeof ConversationsImport
+    }
   }
 }
 
@@ -77,7 +90,9 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
-  ConversationsRoute,
+  ConversationsRoute: ConversationsRoute.addChildren({
+    ConversationsChatIdRoute,
+  }),
   LoginRoute,
   RegisterRoute,
 })
@@ -100,13 +115,20 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "index.tsx"
     },
     "/conversations": {
-      "filePath": "conversations.tsx"
+      "filePath": "conversations.tsx",
+      "children": [
+        "/conversations/$chatId"
+      ]
     },
     "/login": {
       "filePath": "login.tsx"
     },
     "/register": {
       "filePath": "register.tsx"
+    },
+    "/conversations/$chatId": {
+      "filePath": "conversations.$chatId.tsx",
+      "parent": "/conversations"
     }
   }
 }
