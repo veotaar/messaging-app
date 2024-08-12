@@ -28,11 +28,11 @@ function Conversations() {
   }
 
   return (
-    <div className="flex">
-      <div>
+    <div className="flex min-h-svh border p-8">
+      <div className="scroll-auto border p-4">
         <ChatList conversations={loaderData.conversations} />
       </div>
-      <div>
+      <div className="w-full border p-4">
         <Outlet />
       </div>
     </div>

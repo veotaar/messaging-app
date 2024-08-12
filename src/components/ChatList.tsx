@@ -12,14 +12,18 @@ const ChatList = ({ conversations }: ConversationListResponse) => {
   return (
     <div>
       {conversations.map((conversation) => (
-        <div key={conversation._id}>
+        <div key={conversation._id} className="mb-2">
           <Link
             from="/conversations"
             to="/conversations/$chatId"
             params={{ chatId: conversation._id }}
             search={{ page: 1, limit: 20 }}
+            activeOptions={{ exact: true }}
+            activeProps={{ className: 'font-bold' }}
           >
-            <p>{conversation.participants.filter((user) => user._id !== userId).at(0)?.username}</p>
+            <div className="border p-4 hover:bg-slate-200">
+              {conversation.participants.filter((user) => user._id !== userId).at(0)?.username}
+            </div>
           </Link>
         </div>
       ))}
