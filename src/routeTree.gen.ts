@@ -13,9 +13,11 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as RegisterImport } from './routes/register'
 import { Route as LoginImport } from './routes/login'
-import { Route as ConversationsImport } from './routes/conversations'
+import { Route as HomeImport } from './routes/home'
 import { Route as IndexImport } from './routes/index'
-import { Route as ConversationsChatIdImport } from './routes/conversations.$chatId'
+import { Route as HomeIndexImport } from './routes/home.index'
+import { Route as HomeConversationsImport } from './routes/home.conversations'
+import { Route as HomeConversationsChatIdImport } from './routes/home.conversations.$chatId'
 
 // Create/Update Routes
 
@@ -29,8 +31,8 @@ const LoginRoute = LoginImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ConversationsRoute = ConversationsImport.update({
-  path: '/conversations',
+const HomeRoute = HomeImport.update({
+  path: '/home',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -39,9 +41,19 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ConversationsChatIdRoute = ConversationsChatIdImport.update({
+const HomeIndexRoute = HomeIndexImport.update({
+  path: '/',
+  getParentRoute: () => HomeRoute,
+} as any)
+
+const HomeConversationsRoute = HomeConversationsImport.update({
+  path: '/conversations',
+  getParentRoute: () => HomeRoute,
+} as any)
+
+const HomeConversationsChatIdRoute = HomeConversationsChatIdImport.update({
   path: '/$chatId',
-  getParentRoute: () => ConversationsRoute,
+  getParentRoute: () => HomeConversationsRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -55,11 +67,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/conversations': {
-      id: '/conversations'
-      path: '/conversations'
-      fullPath: '/conversations'
-      preLoaderRoute: typeof ConversationsImport
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeImport
       parentRoute: typeof rootRoute
     }
     '/login': {
@@ -76,12 +88,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterImport
       parentRoute: typeof rootRoute
     }
-    '/conversations/$chatId': {
-      id: '/conversations/$chatId'
+    '/home/conversations': {
+      id: '/home/conversations'
+      path: '/conversations'
+      fullPath: '/home/conversations'
+      preLoaderRoute: typeof HomeConversationsImport
+      parentRoute: typeof HomeImport
+    }
+    '/home/': {
+      id: '/home/'
+      path: '/'
+      fullPath: '/home/'
+      preLoaderRoute: typeof HomeIndexImport
+      parentRoute: typeof HomeImport
+    }
+    '/home/conversations/$chatId': {
+      id: '/home/conversations/$chatId'
       path: '/$chatId'
-      fullPath: '/conversations/$chatId'
-      preLoaderRoute: typeof ConversationsChatIdImport
-      parentRoute: typeof ConversationsImport
+      fullPath: '/home/conversations/$chatId'
+      preLoaderRoute: typeof HomeConversationsChatIdImport
+      parentRoute: typeof HomeConversationsImport
     }
   }
 }
@@ -90,8 +116,11 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
-  ConversationsRoute: ConversationsRoute.addChildren({
-    ConversationsChatIdRoute,
+  HomeRoute: HomeRoute.addChildren({
+    HomeConversationsRoute: HomeConversationsRoute.addChildren({
+      HomeConversationsChatIdRoute,
+    }),
+    HomeIndexRoute,
   }),
   LoginRoute,
   RegisterRoute,
@@ -106,7 +135,7 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/conversations",
+        "/home",
         "/login",
         "/register"
       ]
@@ -114,10 +143,11 @@ export const routeTree = rootRoute.addChildren({
     "/": {
       "filePath": "index.tsx"
     },
-    "/conversations": {
-      "filePath": "conversations.tsx",
+    "/home": {
+      "filePath": "home.tsx",
       "children": [
-        "/conversations/$chatId"
+        "/home/conversations",
+        "/home/"
       ]
     },
     "/login": {
@@ -126,9 +156,20 @@ export const routeTree = rootRoute.addChildren({
     "/register": {
       "filePath": "register.tsx"
     },
-    "/conversations/$chatId": {
-      "filePath": "conversations.$chatId.tsx",
-      "parent": "/conversations"
+    "/home/conversations": {
+      "filePath": "home.conversations.tsx",
+      "parent": "/home",
+      "children": [
+        "/home/conversations/$chatId"
+      ]
+    },
+    "/home/": {
+      "filePath": "home.index.tsx",
+      "parent": "/home"
+    },
+    "/home/conversations/$chatId": {
+      "filePath": "home.conversations.$chatId.tsx",
+      "parent": "/home/conversations"
     }
   }
 }

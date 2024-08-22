@@ -14,8 +14,8 @@ const ChatList = ({ conversations }: ConversationListResponse) => {
       {conversations.map((conversation) => (
         <div key={conversation._id} className="mb-2">
           <Link
-            from="/conversations"
-            to="/conversations/$chatId"
+            from="/home/conversations"
+            to="/home/conversations/$chatId"
             params={{ chatId: conversation._id }}
             search={{ page: 1, limit: 20 }}
             activeOptions={{ exact: true }}

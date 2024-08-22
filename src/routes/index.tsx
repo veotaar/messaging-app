@@ -8,7 +8,7 @@ export const Route = createFileRoute('/')({
     console.log(context);
     if (context.auth.isAuthenticated) {
       throw redirect({
-        to: '/conversations',
+        to: '/home/conversations',
         search: {
           redirect: location.href,
         },
@@ -40,8 +40,8 @@ function Index() {
   return (
     <div className="mx-auto max-w-screen-md overflow-hidden text-ellipsis whitespace-nowrap p-2">
       <p>
-        <Link to="/conversations" className="underline underline-offset-8">
-          Go to your conversations!
+        <Link to="/home" className="underline underline-offset-8">
+          Go to dashboard
         </Link>
       </p>
     </div>

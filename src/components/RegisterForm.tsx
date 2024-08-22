@@ -51,7 +51,7 @@ const RegisterForm = () => {
         localStorage.setItem('expires', expires.toString());
         localStorage.setItem('userId', userId);
       }
-      setTimeout(() => navigate({ to: '/conversations' }), 0);
+      setTimeout(() => navigate({ to: '/home/conversations' }), 0);
     },
     onError: (error) => {
       console.error(error);

@@ -7,7 +7,7 @@ const chatSearchSchema = z.object({
   limit: z.number().lte(20).catch(20),
 });
 
-export const Route = createFileRoute('/conversations/$chatId')({
+export const Route = createFileRoute('/home/conversations/$chatId')({
   component: Chat,
   validateSearch: chatSearchSchema,
   beforeLoad: ({ context, location }) => {

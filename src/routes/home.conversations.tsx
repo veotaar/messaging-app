@@ -2,7 +2,7 @@ import { createFileRoute, redirect, Outlet } from '@tanstack/react-router';
 import { conversationsQueryOptions } from '@/api/queryOptions';
 import ChatList from '@/components/ChatList';
 
-export const Route = createFileRoute('/conversations')({
+export const Route = createFileRoute('/home/conversations')({
   beforeLoad: ({ context, location }) => {
     if (!context.auth.isAuthenticated) {
       throw redirect({
