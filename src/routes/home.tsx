@@ -11,6 +11,9 @@ function HomeComponent() {
         <Link to="/home/conversations" activeProps={{ className: `font-bold` }}>
           Conversations
         </Link>
+        <Link to="/home/friends" activeProps={{ className: `font-bold` }}>
+          Friends
+        </Link>
       </div>
       <hr />
       <Outlet />
