@@ -47,6 +47,7 @@ function HomeFriendsComponent() {
   const { isLoading, data: foundUser } = useQuery({
     queryKey: ['find-user', { email: emailToSearch }],
     queryFn: () => findUserByEmail(emailToSearch as string, token as string),
+    retry: false,
     enabled: !!emailToSearch,
   });
 
