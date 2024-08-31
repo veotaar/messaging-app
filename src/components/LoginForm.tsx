@@ -9,6 +9,7 @@ import { loginUser } from '@/api/login';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useAuth } from '@/lib/auth';
+import { Navigate } from '@tanstack/react-router';
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -62,7 +63,7 @@ const LoginForm = () => {
   };
 
   if (isAuthenticated) {
-    return <p className="text-center">You are already logged in</p>;
+    return <Navigate to="/home/conversations" />;
   }
 
   return (

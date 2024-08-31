@@ -17,6 +17,7 @@ import { Route as HomeImport } from './routes/home'
 import { Route as IndexImport } from './routes/index'
 import { Route as HomeIndexImport } from './routes/home.index'
 import { Route as HomeFriendsImport } from './routes/home.friends'
+import { Route as HomeFindFriendsImport } from './routes/home.find-friends'
 import { Route as HomeConversationsImport } from './routes/home.conversations'
 import { Route as HomeConversationsChatIdImport } from './routes/home.conversations.$chatId'
 
@@ -49,6 +50,11 @@ const HomeIndexRoute = HomeIndexImport.update({
 
 const HomeFriendsRoute = HomeFriendsImport.update({
   path: '/friends',
+  getParentRoute: () => HomeRoute,
+} as any)
+
+const HomeFindFriendsRoute = HomeFindFriendsImport.update({
+  path: '/find-friends',
   getParentRoute: () => HomeRoute,
 } as any)
 
@@ -101,6 +107,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeConversationsImport
       parentRoute: typeof HomeImport
     }
+    '/home/find-friends': {
+      id: '/home/find-friends'
+      path: '/find-friends'
+      fullPath: '/home/find-friends'
+      preLoaderRoute: typeof HomeFindFriendsImport
+      parentRoute: typeof HomeImport
+    }
     '/home/friends': {
       id: '/home/friends'
       path: '/friends'
@@ -133,6 +146,7 @@ export const routeTree = rootRoute.addChildren({
     HomeConversationsRoute: HomeConversationsRoute.addChildren({
       HomeConversationsChatIdRoute,
     }),
+    HomeFindFriendsRoute,
     HomeFriendsRoute,
     HomeIndexRoute,
   }),
@@ -161,6 +175,7 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "home.tsx",
       "children": [
         "/home/conversations",
+        "/home/find-friends",
         "/home/friends",
         "/home/"
       ]
@@ -177,6 +192,10 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/home/conversations/$chatId"
       ]
+    },
+    "/home/find-friends": {
+      "filePath": "home.find-friends.tsx",
+      "parent": "/home"
     },
     "/home/friends": {
       "filePath": "home.friends.tsx",
