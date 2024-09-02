@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { useAuth } from '@/lib/auth';
+import { useMakeFriendRequestMutation } from '@/api/queryOptions';
 
 export const Route = createFileRoute('/home/find-friends')({
   beforeLoad: ({ context, location }) => {
@@ -30,6 +31,9 @@ const formSchema = z.object({
 
 function HomeFriendsComponent() {
   const [emailToSearch, setEmailToSearch] = useState<string | null>(null);
+  const [addFriendButtonText, setAddFriendButtonText] = useState('Send Friend Request');
+
+  const makeFriendRequestMutation = useMakeFriendRequestMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,6 +47,23 @@ function HomeFriendsComponent() {
   };
 
   const { token } = useAuth();
+
+  const onFriendRequestSubmit = (to: string) => {
+    makeFriendRequestMutation.mutate(
+      {
+        to: to,
+        token: token as string,
+      },
+      {
+        onError: () => {
+          setAddFriendButtonText('cannot send request');
+        },
+        onSuccess: () => {
+          setAddFriendButtonText('request sent!');
+        },
+      },
+    );
+  };
 
   const { isLoading, data: foundUser } = useQuery({
     queryKey: ['find-user', { email: emailToSearch }],
@@ -77,9 +98,14 @@ function HomeFriendsComponent() {
       <div>
         {foundUser && (
           <div>
-            <p>{foundUser.user._id}</p>
             <p>{foundUser.user.email}</p>
             <p>{foundUser.user.username}</p>
+            <Button
+              onClick={() => onFriendRequestSubmit(foundUser.user._id)}
+              disabled={makeFriendRequestMutation.isError || makeFriendRequestMutation.isSuccess}
+            >
+              {addFriendButtonText}
+            </Button>
           </div>
         )}
       </div>
