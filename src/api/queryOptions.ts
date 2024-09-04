@@ -43,9 +43,9 @@ export const friendsQueryOptions = (userId: string, token: string) => {
   });
 };
 
-export const friendRequestsQueryOptions = (token: string) => {
+export const friendRequestsQueryOptions = (userId: string, token: string) => {
   return queryOptions({
-    queryKey: ['user', 'friend-requests'],
+    queryKey: ['user', 'friend-requests', { id: userId }],
     queryFn: () => getFriendRequests(token),
   });
 };

@@ -1,5 +1,5 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { friendsQueryOptions } from '@/api/queryOptions';
+import { friendsQueryOptions, friendRequestsQueryOptions } from '@/api/queryOptions';
 
 export const Route = createFileRoute('/home/friends')({
   beforeLoad: ({ context, location }) => {
@@ -15,7 +15,11 @@ export const Route = createFileRoute('/home/friends')({
   component: Friends,
   loader: async ({ context }) => {
     const { userId, token } = context.auth;
-    return await context.queryClient.ensureQueryData(friendsQueryOptions(userId as string, token as string));
+    // return await context.queryClient.ensureQueryData(friendsQueryOptions(userId as string, token as string));
+    return await Promise.all([
+      context.queryClient.ensureQueryData(friendsQueryOptions(userId as string, token as string)),
+      context.queryClient.ensureQueryData(friendRequestsQueryOptions(userId as string, token as string)),
+    ]);
   },
 });
 
@@ -28,12 +32,29 @@ function Friends() {
 
   return (
     <div>
-      {loaderData.friends.map((friend) => (
+      <h2>Your friends</h2>
+      {loaderData[0].friends.map((friend) => (
         <div key={friend._id}>
           <p>{friend.username}</p>
           <p>{friend._id}</p>
         </div>
       ))}
+      <h2>Received friend requests</h2>
+      {loaderData[1] &&
+        loaderData[1].received.map((req) => (
+          <div className="w-min border p-2" key={req._id}>
+            <p>{req.from._id}</p>
+            <p>{req.from.username}</p>
+          </div>
+        ))}
+      <h2>Sent friend requests</h2>
+      {loaderData[1] &&
+        loaderData[1].sent.map((req) => (
+          <div className="w-min border p-2" key={req._id}>
+            <p>{req.to._id}</p>
+            <p>{req.to.username}</p>
+          </div>
+        ))}
     </div>
   );
 }

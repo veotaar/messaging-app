@@ -1,6 +1,6 @@
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-export type FriendRequest = {
+export type SentRequest = {
   _id: string;
   to: {
     _id: string;
@@ -8,9 +8,17 @@ export type FriendRequest = {
   };
 };
 
+export type ReceivedRequest = {
+  _id: string;
+  from: {
+    _id: string;
+    username: string;
+  };
+};
+
 export type FriendRequestResponse = {
-  sent: FriendRequest[];
-  received: FriendRequest[];
+  sent: SentRequest[];
+  received: ReceivedRequest[];
 };
 
 export const getFriendRequests = async (token: string): Promise<FriendRequestResponse> => {
