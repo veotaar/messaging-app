@@ -4,6 +4,7 @@ import { getConversations } from './getConversations';
 import { getMessages } from './getMessages';
 import { findUserByEmail } from './findUserByEmail';
 import { getFriends } from './getFriends';
+import { getFriendRequests } from './getFriendRequests';
 
 export const queryClient = new QueryClient();
 
@@ -39,5 +40,12 @@ export const friendsQueryOptions = (userId: string, token: string) => {
   return queryOptions({
     queryKey: ['user', 'friends', { id: userId }],
     queryFn: () => getFriends(userId, token),
+  });
+};
+
+export const friendRequestsQueryOptions = (token: string) => {
+  return queryOptions({
+    queryKey: ['user', 'friend-requests'],
+    queryFn: () => getFriendRequests(token),
   });
 };
