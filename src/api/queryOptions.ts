@@ -4,7 +4,7 @@ import { getConversations } from './getConversations';
 import { getMessages } from './getMessages';
 import { findUserByEmail } from './findUserByEmail';
 import { getFriends } from './getFriends';
-import { getFriendRequests } from './getFriendRequests';
+import { getFriendRequests, acceptFriendRequest, rejectFriendRequest } from './getFriendRequests';
 
 export const queryClient = new QueryClient();
 
@@ -12,6 +12,20 @@ export const useMakeFriendRequestMutation = () => {
   return useMutation({
     mutationKey: ['friend-request', 'create'],
     mutationFn: makeFriendRequest,
+  });
+};
+
+export const useAcceptFriendRequestMutation = (requestId: string, token: string) => {
+  return useMutation({
+    mutationKey: ['friend-request', 'accept'],
+    mutationFn: () => acceptFriendRequest(token, requestId),
+  });
+};
+
+export const useRejectFriendRequestMutation = (requestId: string, token: string) => {
+  return useMutation({
+    mutationKey: ['friend-request', 'reject'],
+    mutationFn: () => rejectFriendRequest(token, requestId),
   });
 };
 

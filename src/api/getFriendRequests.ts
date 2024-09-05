@@ -21,11 +21,55 @@ export type FriendRequestResponse = {
   received: ReceivedRequest[];
 };
 
+export type FriendRequestResultResponse = {
+  msg: string;
+};
+
 export const getFriendRequests = async (token: string): Promise<FriendRequestResponse> => {
   const url = `${BASE_URL}/friend-requests`;
 
   const response = await fetch(url, {
     method: 'GET',
+    mode: 'cors',
+    headers: {
+      Authorization: token,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Response status: ${response.status}`);
+  }
+
+  return response.json();
+};
+
+export const acceptFriendRequest = async (token: string, requestId: string): Promise<FriendRequestResultResponse> => {
+  const url = `${BASE_URL}/friend-requests/${requestId}/accept`;
+
+  const response = await fetch(url, {
+    method: 'PUT',
+    mode: 'cors',
+    headers: {
+      Authorization: token,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Response status: ${response.status}`);
+  }
+
+  return response.json();
+};
+
+export const rejectFriendRequest = async (token: string, requestId: string): Promise<FriendRequestResultResponse> => {
+  const url = `${BASE_URL}/friend-requests/${requestId}/reject`;
+
+  const response = await fetch(url, {
+    method: 'DELETE',
     mode: 'cors',
     headers: {
       Authorization: token,
