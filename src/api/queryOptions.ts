@@ -4,7 +4,12 @@ import { getConversations } from './getConversations';
 import { getMessages } from './getMessages';
 import { findUserByEmail } from './findUserByEmail';
 import { getFriends } from './getFriends';
-import { getFriendRequests, acceptFriendRequest, rejectFriendRequest } from './getFriendRequests';
+import {
+  getFriendRequests,
+  acceptFriendRequest,
+  rejectFriendRequest,
+  FriendRequestActionPayload,
+} from './getFriendRequests';
 
 export const queryClient = new QueryClient();
 
@@ -15,17 +20,17 @@ export const useMakeFriendRequestMutation = () => {
   });
 };
 
-export const useAcceptFriendRequestMutation = (requestId: string, token: string) => {
+export const useAcceptFriendRequestMutation = (payload: FriendRequestActionPayload) => {
   return useMutation({
-    mutationKey: ['friend-request', 'accept'],
-    mutationFn: () => acceptFriendRequest(token, requestId),
+    mutationKey: ['friend-request', 'accept', { id: payload.requestId }],
+    mutationFn: acceptFriendRequest,
   });
 };
 
-export const useRejectFriendRequestMutation = (requestId: string, token: string) => {
+export const useRejectFriendRequestMutation = (payload: FriendRequestActionPayload) => {
   return useMutation({
-    mutationKey: ['friend-request', 'reject'],
-    mutationFn: () => rejectFriendRequest(token, requestId),
+    mutationKey: ['friend-request', 'reject', { id: payload.requestId }],
+    mutationFn: rejectFriendRequest,
   });
 };
 

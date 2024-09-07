@@ -1,5 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { friendsQueryOptions, friendRequestsQueryOptions } from '@/api/queryOptions';
+import ReceivedRequest from '@/components/ReceivedRequest';
 
 export const Route = createFileRoute('/home/friends')({
   beforeLoad: ({ context, location }) => {
@@ -40,13 +41,7 @@ function Friends() {
         </div>
       ))}
       <h2>Received friend requests</h2>
-      {loaderData[1] &&
-        loaderData[1].received.map((req) => (
-          <div className="w-min border p-2" key={req._id}>
-            <p>{req.from._id}</p>
-            <p>{req.from.username}</p>
-          </div>
-        ))}
+      {loaderData[1] && loaderData[1].received.map((req) => <ReceivedRequest request={req} />)}
       <h2>Sent friend requests</h2>
       {loaderData[1] &&
         loaderData[1].sent.map((req) => (

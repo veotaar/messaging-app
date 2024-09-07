@@ -25,6 +25,11 @@ export type FriendRequestResultResponse = {
   msg: string;
 };
 
+export type FriendRequestActionPayload = {
+  token: string;
+  requestId: string;
+};
+
 export const getFriendRequests = async (token: string): Promise<FriendRequestResponse> => {
   const url = `${BASE_URL}/friend-requests`;
 
@@ -45,7 +50,10 @@ export const getFriendRequests = async (token: string): Promise<FriendRequestRes
   return response.json();
 };
 
-export const acceptFriendRequest = async (token: string, requestId: string): Promise<FriendRequestResultResponse> => {
+export const acceptFriendRequest = async ({
+  token,
+  requestId,
+}: FriendRequestActionPayload): Promise<FriendRequestResultResponse> => {
   const url = `${BASE_URL}/friend-requests/${requestId}/accept`;
 
   const response = await fetch(url, {
@@ -65,7 +73,10 @@ export const acceptFriendRequest = async (token: string, requestId: string): Pro
   return response.json();
 };
 
-export const rejectFriendRequest = async (token: string, requestId: string): Promise<FriendRequestResultResponse> => {
+export const rejectFriendRequest = async ({
+  token,
+  requestId,
+}: FriendRequestActionPayload): Promise<FriendRequestResultResponse> => {
   const url = `${BASE_URL}/friend-requests/${requestId}/reject`;
 
   const response = await fetch(url, {
