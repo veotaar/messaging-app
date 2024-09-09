@@ -8,6 +8,7 @@ import {
   getFriendRequests,
   acceptFriendRequest,
   rejectFriendRequest,
+  deleteFriendRequest,
   FriendRequestActionPayload,
 } from './getFriendRequests';
 
@@ -31,6 +32,13 @@ export const useRejectFriendRequestMutation = (payload: FriendRequestActionPaylo
   return useMutation({
     mutationKey: ['friend-request', 'reject', { id: payload.requestId }],
     mutationFn: rejectFriendRequest,
+  });
+};
+
+export const useDeleteFriendRequestMutation = (payload: FriendRequestActionPayload) => {
+  return useMutation({
+    mutationKey: ['friend-request', 'delete', { id: payload.requestId }],
+    mutationFn: deleteFriendRequest,
   });
 };
 

@@ -95,3 +95,26 @@ export const rejectFriendRequest = async ({
 
   return response.json();
 };
+
+export const deleteFriendRequest = async ({
+  token,
+  requestId,
+}: FriendRequestActionPayload): Promise<FriendRequestResultResponse> => {
+  const url = `${BASE_URL}/friend-requests/${requestId}`;
+
+  const response = await fetch(url, {
+    method: 'DELETE',
+    mode: 'cors',
+    headers: {
+      Authorization: token,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Response status: ${response.status}`);
+  }
+
+  return response.json();
+};
