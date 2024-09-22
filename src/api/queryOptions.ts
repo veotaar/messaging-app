@@ -11,6 +11,7 @@ import {
   deleteFriendRequest,
   FriendRequestActionPayload,
 } from './getFriendRequests';
+import { sendMessage } from './sendMessage';
 
 export const queryClient = new QueryClient();
 
@@ -18,6 +19,13 @@ export const useMakeFriendRequestMutation = () => {
   return useMutation({
     mutationKey: ['friend-request', 'create'],
     mutationFn: makeFriendRequest,
+  });
+};
+
+export const useSendMessageMutation = (conversationId: string) => {
+  return useMutation({
+    mutationKey: ['new-message', { conversation: conversationId }],
+    mutationFn: sendMessage,
   });
 };
 
