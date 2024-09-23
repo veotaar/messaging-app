@@ -1,6 +1,7 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { z } from 'zod';
 import { messagesQueryOptions } from '@/api/queryOptions';
+import MessageBox from '@/components/MessageBox';
 
 const chatSearchSchema = z.object({
   page: z.number().catch(1),
@@ -30,6 +31,7 @@ export const Route = createFileRoute('/home/conversations/$chatId')({
 
 function Chat() {
   const loaderData = Route.useLoaderData();
+  const { chatId } = Route.useParams();
 
   return (
     <div>
@@ -38,6 +40,9 @@ function Chat() {
           {message.author.username}: {message.content}
         </div>
       ))}
+      <div>
+        <MessageBox chatId={chatId} />
+      </div>
     </div>
   );
 }
