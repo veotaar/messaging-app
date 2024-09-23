@@ -6,7 +6,6 @@ import { Textarea } from './ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/auth';
 import { useSendMessageMutation } from '@/api/queryOptions';
-import { queryClient } from '@/api/queryOptions';
 
 const formSchema = z.object({
   message: z.string().min(1),
@@ -32,8 +31,6 @@ const MessageBox = ({ chatId }: { chatId: string }) => {
       },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ['conversations', 'messages', { id: chatId }] });
-          queryClient.refetchQueries({ queryKey: ['conversations', 'messages', { id: chatId }] });
           form.reset();
         },
       },

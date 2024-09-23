@@ -12,6 +12,7 @@ import {
   FriendRequestActionPayload,
 } from './getFriendRequests';
 import { sendMessage } from './sendMessage';
+import { useRouter } from '@tanstack/react-router';
 
 export const queryClient = new QueryClient();
 
@@ -23,9 +24,15 @@ export const useMakeFriendRequestMutation = () => {
 };
 
 export const useSendMessageMutation = (conversationId: string) => {
+  const router = useRouter();
   return useMutation({
     mutationKey: ['new-message', { conversation: conversationId }],
     mutationFn: sendMessage,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['conversations', 'messages', { id: conversationId }] });
+      await queryClient.refetchQueries({ queryKey: ['conversations', 'messages', { id: conversationId }] });
+      await router.invalidate();
+    },
   });
 };
 
