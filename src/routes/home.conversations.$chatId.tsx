@@ -1,16 +1,12 @@
+import * as React from 'react';
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { z } from 'zod';
-import { messagesQueryOptions } from '@/api/queryOptions';
 import MessageBox from '@/components/MessageBox';
-
-const chatSearchSchema = z.object({
-  page: z.number().catch(1),
-  limit: z.number().lte(20).catch(20),
-});
+import { useAuth } from '@/lib/auth';
+import useMessages from '@/hooks/useMessages';
+import { Button } from '@/components/ui/button';
 
 export const Route = createFileRoute('/home/conversations/$chatId')({
   component: Chat,
-  validateSearch: chatSearchSchema,
   beforeLoad: ({ context, location }) => {
     if (!context.auth.isAuthenticated) {
       throw redirect({
@@ -21,27 +17,51 @@ export const Route = createFileRoute('/home/conversations/$chatId')({
       });
     }
   },
-  loaderDeps: ({ search: { page, limit } }) => ({ page, limit }),
-  loader: async ({ params, context, deps: { page, limit } }) => {
-    return await context.queryClient.ensureQueryData(
-      messagesQueryOptions(params.chatId, page, limit, context.auth.token as string),
-    );
-  },
 });
 
 function Chat() {
-  const loaderData = Route.useLoaderData();
+  const { token } = useAuth();
   const { chatId } = Route.useParams();
+
+  const { data, error, fetchPreviousPage, hasPreviousPage, isFetchingPreviousPage, status } = useMessages(
+    chatId,
+    token as string,
+  );
+
+  if (status === 'pending') {
+    return (
+      <div>
+        <p>Loading chat...</p>
+      </div>
+    );
+  }
+
+  if (status === 'error') {
+    return (
+      <div>
+        <p>Error: {error.message}</p>
+      </div>
+    );
+  }
 
   return (
     <div>
-      {loaderData.messages.map((message) => (
-        <div key={message._id}>
-          {message.author.username}: {message.content}
-        </div>
-      ))}
+      <Button onClick={() => fetchPreviousPage()} disabled={!hasPreviousPage || isFetchingPreviousPage}>
+        {isFetchingPreviousPage ? 'Loading previous messages' : hasPreviousPage ? 'Load More' : 'Nothing more to load'}
+      </Button>
       <div>
-        <MessageBox chatId={chatId} />
+        {data.pages.map((group, i) => (
+          <React.Fragment key={i}>
+            {group.messagesData.messages.map((message) => (
+              <div key={message._id}>
+                {message.author.username}: {message.content}
+              </div>
+            ))}
+          </React.Fragment>
+        ))}
+        <div>
+          <MessageBox chatId={chatId} />
+        </div>
       </div>
     </div>
   );

@@ -13,16 +13,26 @@ export type Message = {
 };
 
 export type MessagesResponse = {
-  messages: Message[];
+  messagesData: {
+    currentPage: number;
+    hasNextPage: boolean;
+    nextPage: number | null;
+    hasPreviousPage: boolean;
+    previousPage: number | null;
+    messages: Message[];
+  };
 };
 
-export const getMessages = async (
-  chatId: string,
-  page: number,
-  limit: number,
-  token: string,
-): Promise<MessagesResponse> => {
-  const url = `${BASE_URL}/conversations/${chatId}/messages?page=${page}&limit=${limit}`;
+export const getMessages = async ({
+  pageParam,
+  chatId,
+  token,
+}: {
+  pageParam: number;
+  chatId: string;
+  token: string;
+}): Promise<MessagesResponse> => {
+  const url = `${BASE_URL}/conversations/${chatId}/messages?page=${pageParam}`;
 
   const response = await fetch(url, {
     method: 'GET',

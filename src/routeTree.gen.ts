@@ -140,19 +140,122 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren({
-  IndexRoute,
-  HomeRoute: HomeRoute.addChildren({
-    HomeConversationsRoute: HomeConversationsRoute.addChildren({
-      HomeConversationsChatIdRoute,
-    }),
-    HomeFindFriendsRoute,
-    HomeFriendsRoute,
-    HomeIndexRoute,
-  }),
-  LoginRoute,
-  RegisterRoute,
-})
+interface HomeConversationsRouteChildren {
+  HomeConversationsChatIdRoute: typeof HomeConversationsChatIdRoute
+}
+
+const HomeConversationsRouteChildren: HomeConversationsRouteChildren = {
+  HomeConversationsChatIdRoute: HomeConversationsChatIdRoute,
+}
+
+const HomeConversationsRouteWithChildren =
+  HomeConversationsRoute._addFileChildren(HomeConversationsRouteChildren)
+
+interface HomeRouteChildren {
+  HomeConversationsRoute: typeof HomeConversationsRouteWithChildren
+  HomeFindFriendsRoute: typeof HomeFindFriendsRoute
+  HomeFriendsRoute: typeof HomeFriendsRoute
+  HomeIndexRoute: typeof HomeIndexRoute
+}
+
+const HomeRouteChildren: HomeRouteChildren = {
+  HomeConversationsRoute: HomeConversationsRouteWithChildren,
+  HomeFindFriendsRoute: HomeFindFriendsRoute,
+  HomeFriendsRoute: HomeFriendsRoute,
+  HomeIndexRoute: HomeIndexRoute,
+}
+
+const HomeRouteWithChildren = HomeRoute._addFileChildren(HomeRouteChildren)
+
+export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '/home': typeof HomeRouteWithChildren
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/home/conversations': typeof HomeConversationsRouteWithChildren
+  '/home/find-friends': typeof HomeFindFriendsRoute
+  '/home/friends': typeof HomeFriendsRoute
+  '/home/': typeof HomeIndexRoute
+  '/home/conversations/$chatId': typeof HomeConversationsChatIdRoute
+}
+
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/home/conversations': typeof HomeConversationsRouteWithChildren
+  '/home/find-friends': typeof HomeFindFriendsRoute
+  '/home/friends': typeof HomeFriendsRoute
+  '/home': typeof HomeIndexRoute
+  '/home/conversations/$chatId': typeof HomeConversationsChatIdRoute
+}
+
+export interface FileRoutesById {
+  __root__: typeof rootRoute
+  '/': typeof IndexRoute
+  '/home': typeof HomeRouteWithChildren
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/home/conversations': typeof HomeConversationsRouteWithChildren
+  '/home/find-friends': typeof HomeFindFriendsRoute
+  '/home/friends': typeof HomeFriendsRoute
+  '/home/': typeof HomeIndexRoute
+  '/home/conversations/$chatId': typeof HomeConversationsChatIdRoute
+}
+
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/home'
+    | '/login'
+    | '/register'
+    | '/home/conversations'
+    | '/home/find-friends'
+    | '/home/friends'
+    | '/home/'
+    | '/home/conversations/$chatId'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/home/conversations'
+    | '/home/find-friends'
+    | '/home/friends'
+    | '/home'
+    | '/home/conversations/$chatId'
+  id:
+    | '__root__'
+    | '/'
+    | '/home'
+    | '/login'
+    | '/register'
+    | '/home/conversations'
+    | '/home/find-friends'
+    | '/home/friends'
+    | '/home/'
+    | '/home/conversations/$chatId'
+  fileRoutesById: FileRoutesById
+}
+
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  HomeRoute: typeof HomeRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
+}
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  HomeRoute: HomeRouteWithChildren,
+  LoginRoute: LoginRoute,
+  RegisterRoute: RegisterRoute,
+}
+
+export const routeTree = rootRoute
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* prettier-ignore-end */
 

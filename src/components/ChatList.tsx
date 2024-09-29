@@ -17,7 +17,7 @@ const ChatList = ({ conversations }: ConversationListResponse) => {
             from="/home/conversations"
             to="/home/conversations/$chatId"
             params={{ chatId: conversation._id }}
-            search={{ page: 1, limit: 20 }}
+            search={{ page: 1 }}
             activeOptions={{ exact: true }}
             activeProps={{ className: 'font-bold' }}
           >

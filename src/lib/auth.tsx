@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { Socket } from 'socket.io-client';
+import useSocket from '@/hooks/useSocket';
 
 export interface AuthContext {
   isAuthenticated: boolean;
@@ -10,6 +12,7 @@ export interface AuthContext {
   setExpires: (expires: string | null) => void;
   userId: string | null;
   setUserId: (userId: string | null) => void;
+  socket: Socket | null;
 }
 
 const AuthContext = React.createContext<AuthContext | null>(null);
@@ -20,9 +23,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [expires, setExpires] = React.useState<string | null>(null);
   const [userId, setUserId] = React.useState<string | null>(null);
   const isAuthenticated = !!user;
+  const socket = useSocket(userId);
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, user, setUser, token, setToken, expires, setExpires, userId, setUserId }}
+      value={{ isAuthenticated, user, setUser, token, setToken, expires, setExpires, userId, setUserId, socket }}
     >
       {children}
     </AuthContext.Provider>
