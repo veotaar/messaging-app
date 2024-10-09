@@ -10,6 +10,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useAuth } from '@/lib/auth';
 import { Navigate } from '@tanstack/react-router';
+import { socket } from '@/lib/socket';
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -39,6 +40,7 @@ const LoginForm = () => {
       const user = data.user?.username;
       const userId = data.user?._id;
       if (token && user && expires) {
+        socket.connect();
         setToken(token);
         setUser(user);
         setExpires(expires);

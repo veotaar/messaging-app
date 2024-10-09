@@ -3,6 +3,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { routeTree } from './routeTree.gen';
 import { queryClient } from './api/queryOptions';
+import useSocket from './hooks/useSocket';
 
 const router = createRouter({
   routeTree,
@@ -23,6 +24,7 @@ declare module '@tanstack/react-router' {
 
 const InnerApp = () => {
   const auth = useAuth();
+  useSocket();
   return <RouterProvider router={router} context={{ auth }} />;
 };
 

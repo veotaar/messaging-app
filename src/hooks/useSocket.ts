@@ -1,24 +1,43 @@
 import { useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { socket } from '@/lib/socket';
+import { NewMessageResponse } from '@/api/sendMessage';
 
-const URL = 'http://localhost:1337';
-
-const useSocket = (userId: string | null) => {
-  const [socket, setSocket] = useState<Socket | null>(null);
+const useSocket = () => {
+  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [liveMessages, setLiveMessages] = useState<null | NewMessageResponse[]>(null);
 
   useEffect(() => {
-    const socketInstance = io(URL);
+    function onConnect() {
+      setIsConnected(true);
+    }
 
-    socketInstance.emit('join', userId);
+    function onDisconnect() {
+      setIsConnected(false);
+    }
 
-    setSocket(socketInstance);
+    function onNewMessage(message: NewMessageResponse) {
+      if (liveMessages) {
+        setLiveMessages([...liveMessages, message]);
+      } else {
+        setLiveMessages([message]);
+      }
+    }
+
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+    socket.on('newMessage', onNewMessage);
 
     return () => {
-      socketInstance.disconnect();
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+      socket.off('newMessage', onNewMessage);
     };
-  }, [userId]);
+  }, [liveMessages]);
 
-  return socket;
+  return {
+    isConnected,
+    liveMessages,
+  };
 };
 
 export default useSocket;

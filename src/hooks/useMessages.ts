@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, keepPreviousData } from '@tanstack/react-query';
 import { getMessages } from '@/api/getMessages';
 
 const useMessages = (chatId: string, token: string) => {
@@ -8,6 +8,7 @@ const useMessages = (chatId: string, token: string) => {
     initialPageParam: -1,
     getNextPageParam: (lastPage) => lastPage.messagesData.nextPage,
     getPreviousPageParam: (lastPage) => lastPage.messagesData.previousPage,
+    placeholderData: keepPreviousData,
     staleTime: 300000,
   });
 };

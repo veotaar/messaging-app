@@ -6,6 +6,7 @@ import { Textarea } from './ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/auth';
 import { useSendMessageMutation } from '@/api/queryOptions';
+import { socket } from '@/lib/socket';
 
 const formSchema = z.object({
   message: z.string().min(1),
@@ -20,6 +21,7 @@ const MessageBox = ({ chatId }: { chatId: string }) => {
   });
 
   const { token } = useAuth();
+
   const { mutate, isPending, isError } = useSendMessageMutation(chatId);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
@@ -30,8 +32,11 @@ const MessageBox = ({ chatId }: { chatId: string }) => {
         content: values.message,
       },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
           form.reset();
+          if (socket) {
+            socket.emit('newMessage', data);
+          }
         },
       },
     );
