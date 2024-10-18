@@ -9,7 +9,7 @@ const useMessages = (chatId: string, token: string) => {
     getNextPageParam: (lastPage) => lastPage.messagesData.nextPage,
     getPreviousPageParam: (lastPage) => lastPage.messagesData.previousPage,
     placeholderData: keepPreviousData,
-    staleTime: 300000,
+    staleTime: Infinity,
   });
 };
 

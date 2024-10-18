@@ -9,7 +9,7 @@ interface ServerToClientEvents {
 }
 
 interface ClientToServerEvents {
-  newMessage: (message: NewMessageResponse) => void;
+  sendMessage: (message: NewMessageResponse) => void;
   joinChat: (chatId: string) => void;
   join: (userId: string | null) => void;
 }

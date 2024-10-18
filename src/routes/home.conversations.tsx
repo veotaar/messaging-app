@@ -28,7 +28,7 @@ function Conversations() {
   }
 
   return (
-    <div className="flex min-h-svh border p-8">
+    <div className="flex h-full p-8">
       <div className="scroll-auto border p-4">
         <ChatList conversations={loaderData.conversations} />
       </div>
