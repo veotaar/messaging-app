@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import useSocket from '@/hooks/useSocket';
 import { socket } from '@/lib/socket';
 import { z } from 'zod';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const chatSearchSchema = z.object({
   to: z.string(),
@@ -35,6 +36,12 @@ function Chat() {
   const { to } = Route.useSearch();
   // socket.emit('joinChat', chatId);
 
+  const messagesEndRef = React.useRef<null | HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'instant' });
+  };
+
   const {
     data,
     error,
@@ -45,6 +52,10 @@ function Chat() {
     isFetchingPreviousPage,
     status,
   } = useMessages(chatId, token as string);
+
+  React.useEffect(() => {
+    scrollToBottom();
+  }, []);
 
   React.useEffect(() => {
     socket.emit('joinChat', chatId);
@@ -65,6 +76,10 @@ function Chat() {
     }
   }, [data, hasPreviousPage, fetchPreviousPage, hasNextPage, fetchNextPage]);
 
+  React.useEffect(() => {
+    scrollToBottom();
+  }, [liveMessages]);
+
   if (status === 'pending') {
     return (
       <div>
@@ -83,10 +98,14 @@ function Chat() {
 
   return (
     <div>
-      <Button onClick={() => fetchPreviousPage()} disabled={!hasPreviousPage || isFetchingPreviousPage}>
-        {isFetchingPreviousPage ? 'Loading previous messages' : hasPreviousPage ? 'Load More' : 'Nothing more to load'}
-      </Button>
-      <div>
+      <ScrollArea className="h-72">
+        <Button onClick={() => fetchPreviousPage()} disabled={!hasPreviousPage || isFetchingPreviousPage}>
+          {isFetchingPreviousPage
+            ? 'Loading previous messages'
+            : hasPreviousPage
+              ? 'Load More'
+              : 'Nothing more to load'}
+        </Button>
         {data.pages.map((group, i) => (
           <React.Fragment key={i}>
             {group.messagesData.messages.map((message) => (
@@ -104,9 +123,10 @@ function Chat() {
                 {to}: {message.newMessage.content}
               </div>
             ))}
-        <div>
-          <MessageBox chatId={chatId} />
-        </div>
+        <div ref={messagesEndRef} />
+      </ScrollArea>
+      <div className="w-full">
+        <MessageBox chatId={chatId} />
       </div>
     </div>
   );
