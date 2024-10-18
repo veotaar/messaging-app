@@ -13,8 +13,8 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => (
     <>
       <Outlet />
-      <TanStackRouterDevtools />
-      <ReactQueryDevtools />
+      <TanStackRouterDevtools position="top-right" />
+      <ReactQueryDevtools buttonPosition="bottom-left" />
     </>
   ),
 });
