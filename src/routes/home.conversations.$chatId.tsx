@@ -4,7 +4,6 @@ import MessageBox from '@/components/MessageBox';
 import { useAuth } from '@/lib/auth';
 import useMessages from '@/hooks/useMessages';
 import { Button } from '@/components/ui/button';
-// import useLiveMessages from '@/hooks/useLiveMessages';
 import useSocket from '@/hooks/useSocket';
 import { socket } from '@/lib/socket';
 import { z } from 'zod';
@@ -34,7 +33,6 @@ function Chat() {
   const { chatId } = Route.useParams();
   const { liveMessages } = useSocket();
   const { to } = Route.useSearch();
-  // socket.emit('joinChat', chatId);
 
   const messagesEndRef = React.useRef<null | HTMLDivElement>(null);
 
@@ -54,11 +52,8 @@ function Chat() {
   } = useMessages(chatId, token as string);
 
   React.useEffect(() => {
-    scrollToBottom();
-  }, []);
-
-  React.useEffect(() => {
     socket.emit('joinChat', chatId);
+    scrollToBottom();
   }, [chatId]);
 
   React.useEffect(() => {
@@ -97,8 +92,8 @@ function Chat() {
   }
 
   return (
-    <div>
-      <ScrollArea className="h-72">
+    <div className="flex h-full flex-col gap-2">
+      <ScrollArea className="h-[calc(100%-2.75rem)]">
         <Button onClick={() => fetchPreviousPage()} disabled={!hasPreviousPage || isFetchingPreviousPage}>
           {isFetchingPreviousPage
             ? 'Loading previous messages'
@@ -125,7 +120,7 @@ function Chat() {
             ))}
         <div ref={messagesEndRef} />
       </ScrollArea>
-      <div className="w-full">
+      <div className="h-11 w-full overflow-hidden">
         <MessageBox chatId={chatId} />
       </div>
     </div>

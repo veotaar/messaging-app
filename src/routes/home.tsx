@@ -7,7 +7,7 @@ export const Route = createFileRoute('/home')({
 function HomeComponent() {
   return (
     <>
-      <div className="bg-slate-400 p-1 font-bold">Instant Messaging App</div>
+      <div className="h-8 bg-slate-400 p-1 font-bold">Instant Messaging App</div>
       <div className="flex bg-slate-400">
         <div className="flex flex-col gap-2 bg-slate-400 p-1">
           <Link
@@ -77,7 +77,7 @@ function HomeComponent() {
             </div>
           </Link>
         </div>
-        <div className="w-full rounded-tl-lg bg-slate-300">
+        <div className="h-[calc(100svh-2rem)] w-full rounded-tl-lg bg-slate-300">
           <Outlet />
         </div>
       </div>

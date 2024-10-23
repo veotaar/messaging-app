@@ -48,6 +48,7 @@ const MessageBox = ({ chatId }: { chatId: string }) => {
   const onEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key !== 'Enter') return;
     if (e.shiftKey) return;
+    e.preventDefault();
     formRef.current?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
   };
 
@@ -64,16 +65,22 @@ const MessageBox = ({ chatId }: { chatId: string }) => {
                   <FormControl>
                     <Textarea
                       placeholder="Your message"
-                      className="h-auto resize-none"
+                      className="h-auto resize-none space-y-0 border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                       {...field}
                       onKeyDown={(e) => onEnter(e)}
+                      rows={1}
                     />
                   </FormControl>
                 </FormItem>
               )}
             />
           </div>
-          <Button type="submit" disabled={isPending}>
+          <Button
+            type="submit"
+            variant={'ghost'}
+            disabled={isPending || !form.formState.isDirty}
+            className="self-center"
+          >
             {isPending ? 'Sending...' : 'Send'}
           </Button>
         </form>
