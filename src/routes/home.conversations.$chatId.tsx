@@ -29,7 +29,7 @@ export const Route = createFileRoute('/home/conversations/$chatId')({
 });
 
 function Chat() {
-  const { token } = useAuth();
+  const { token, userId, user } = useAuth();
   const { chatId } = Route.useParams();
   const { liveMessages } = useSocket();
   const { to } = Route.useSearch();
@@ -115,7 +115,7 @@ function Chat() {
             .filter((message) => message.newMessage.conversation === chatId)
             .map((message) => (
               <div key={message.newMessage._id}>
-                {to}: {message.newMessage.content}
+                {message.newMessage.author === userId ? user : to}: {message.newMessage.content}
               </div>
             ))}
         <div ref={messagesEndRef} />
