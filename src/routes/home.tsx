@@ -1,3 +1,4 @@
+import { ModeToggle } from '@/components/ModeToggle';
 import { createFileRoute, Link, Outlet } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/home')({
@@ -7,15 +8,16 @@ export const Route = createFileRoute('/home')({
 function HomeComponent() {
   return (
     <>
-      <div className="h-8 bg-slate-400 p-1 font-bold">Instant Messaging App</div>
-      <div className="flex bg-slate-400">
-        <div className="flex flex-col gap-2 bg-slate-400 p-1">
+      <div className="h-8 bg-background p-1 font-bold text-yellow-600">⚡Instant Messaging</div>
+
+      <div className="flex bg-background">
+        <div className="flex flex-col gap-2 bg-background p-1">
           <Link
-            className="rounded-md hover:bg-violet-200"
+            className="rounded-md hover:bg-blue-600"
             to="/home/conversations"
-            activeProps={{ className: `font-bold bg-violet-300 shadow-sm` }}
+            activeProps={{ className: `font-bold bg-blue-500 shadow-sm` }}
           >
-            <div className="p-2 text-violet-700">
+            <div className="p-2 text-yellow-600">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -33,11 +35,11 @@ function HomeComponent() {
             </div>
           </Link>
           <Link
-            className="rounded-md hover:bg-violet-200"
+            className="rounded-md hover:bg-blue-600"
             to="/home/friends"
-            activeProps={{ className: `font-bold bg-violet-300 shadow-sm` }}
+            activeProps={{ className: `font-bold bg-blue-500 shadow-sm` }}
           >
-            <div className="p-2 text-violet-700">
+            <div className="p-2 text-yellow-600">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -55,11 +57,11 @@ function HomeComponent() {
             </div>
           </Link>
           <Link
-            className="rounded-md hover:bg-violet-200"
+            className="rounded-md hover:bg-blue-600"
             to="/home/find-friends"
-            activeProps={{ className: `font-bold bg-violet-300 shadow-sm` }}
+            activeProps={{ className: `font-bold bg-blue-500 shadow-sm` }}
           >
-            <div className="p-2 text-violet-700">
+            <div className="p-2 text-yellow-600">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -76,6 +78,9 @@ function HomeComponent() {
               </svg>
             </div>
           </Link>
+          <div className="self-end">
+            <ModeToggle />
+          </div>
         </div>
         <div className="h-[calc(100svh-2rem)] w-full rounded-tl-lg bg-slate-300">
           <Outlet />
