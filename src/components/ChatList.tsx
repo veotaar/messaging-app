@@ -14,34 +14,39 @@ const ChatList = ({ conversations }: ConversationListResponse) => {
 
   return (
     <div>
+      <div className="p-2 text-lg font-bold">
+        <h2>Conversations</h2>
+      </div>
       <Input
-        className="mb-2"
-        placeholder="Search"
+        className="mb-2 rounded"
+        placeholder="Search..."
         value={inputFilter}
         onChange={(e) => setInputFilter(e.target.value)}
       />
-      {conversations
-        .filter((conversation) => {
-          const chatWith = conversation.participants.filter((user) => user._id !== userId).at(0)?.username as string;
-          return chatWith.toLowerCase().includes(inputFilter.toLowerCase());
-        })
-        .map((conversation) => {
-          const chatWith = conversation.participants.filter((user) => user._id !== userId).at(0)?.username as string;
-          return (
-            <div key={conversation._id} className="mb-2">
+      <div className="flex flex-col font-semibold">
+        {conversations
+          .filter((conversation) => {
+            const chatWith = conversation.participants.filter((user) => user._id !== userId).at(0)?.username as string;
+            return chatWith.toLowerCase().includes(inputFilter.toLowerCase());
+          })
+          .map((conversation) => {
+            const chatWith = conversation.participants.filter((user) => user._id !== userId).at(0)?.username as string;
+            return (
               <Link
+                className="mb-2 rounded border border-transparent p-4 hover:bg-muted"
+                key={conversation._id}
                 from="/home/conversations"
                 to="/home/conversations/$chatId"
                 params={{ chatId: conversation._id }}
                 search={{ to: chatWith }}
                 activeOptions={{ exact: true }}
-                activeProps={{ className: 'font-bold' }}
+                activeProps={{ className: 'bg-muted border-border shadow' }}
               >
-                <div className="rounded border p-4 hover:bg-muted">{chatWith}</div>
+                {chatWith}
               </Link>
-            </div>
-          );
-        })}
+            );
+          })}
+      </div>
     </div>
   );
 };

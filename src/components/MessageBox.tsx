@@ -55,7 +55,7 @@ const MessageBox = ({ chatId }: { chatId: string }) => {
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex rounded border bg-card" ref={formRef}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex border-t" ref={formRef}>
           <div className="flex-grow">
             <FormField
               control={form.control}
@@ -65,7 +65,7 @@ const MessageBox = ({ chatId }: { chatId: string }) => {
                   <FormControl>
                     <Textarea
                       placeholder="Your message"
-                      className="h-auto resize-none space-y-0 border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                      className="h-auto resize-none space-y-0 border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-card"
                       {...field}
                       onKeyDown={(e) => onEnter(e)}
                       rows={1}

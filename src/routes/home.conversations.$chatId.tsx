@@ -8,6 +8,8 @@ import useSocket from '@/hooks/useSocket';
 import { socket } from '@/lib/socket';
 import { z } from 'zod';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
 
 const chatSearchSchema = z.object({
   to: z.string(),
@@ -29,7 +31,7 @@ export const Route = createFileRoute('/home/conversations/$chatId')({
 });
 
 function Chat() {
-  const { token, userId, user } = useAuth();
+  const { token, userId } = useAuth();
   const { chatId } = Route.useParams();
   const { liveMessages } = useSocket();
   const { to } = Route.useSearch();
@@ -93,31 +95,61 @@ function Chat() {
 
   return (
     <div className="flex h-full flex-col gap-2">
-      <ScrollArea className="h-[calc(100%-2.75rem)]">
-        <Button onClick={() => fetchPreviousPage()} disabled={!hasPreviousPage || isFetchingPreviousPage}>
+      <div className="border-b p-3 font-bold">{to}</div>
+      <ScrollArea className="h-[calc(100%-2.75rem)] px-4">
+        <Button
+          onClick={() => fetchPreviousPage()}
+          disabled={!hasPreviousPage || isFetchingPreviousPage}
+          className={cn({ hidden: !hasPreviousPage })}
+        >
           {isFetchingPreviousPage
             ? 'Loading previous messages'
             : hasPreviousPage
               ? 'Load More'
               : 'Nothing more to load'}
         </Button>
-        {data.pages.map((group, i) => (
-          <React.Fragment key={i}>
-            {group.messagesData.messages.map((message) => (
-              <div key={message._id}>
-                {message.author.username}: {message.content}
+        <div className="mb-[0.05rem] flex flex-col gap-[0.05rem]">
+          {data.pages.map((group, i) => (
+            <div key={i}>
+              <div className="flex flex-col items-end gap-[0.1rem] whitespace-pre-wrap">
+                {group.messagesData.messages.map((message) => (
+                  <div
+                    className={cn(
+                      'flex gap-4 rounded-md bg-primary px-2 py-2 text-primary-foreground dark:text-foreground',
+                      {
+                        'self-start bg-accent text-foreground': message.author._id !== userId,
+                      },
+                    )}
+                    key={message._id}
+                  >
+                    <div>{message.content}</div>
+                    <div className="self-end text-xs">{format(message.createdAt, 'kk:mm')}</div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </React.Fragment>
-        ))}
-        {liveMessages &&
-          liveMessages
-            .filter((message) => message.newMessage.conversation === chatId)
-            .map((message) => (
-              <div key={message.newMessage._id}>
-                {message.newMessage.author === userId ? user : to}: {message.newMessage.content}
-              </div>
-            ))}
+            </div>
+          ))}
+        </div>
+        <div className="flex flex-col items-end gap-[0.1rem] whitespace-pre-wrap">
+          {liveMessages &&
+            liveMessages
+              .filter((message) => message.newMessage.conversation === chatId)
+              .map((message) => (
+                <div
+                  className={cn(
+                    'flex gap-4 rounded-md bg-primary px-2 py-2 text-primary-foreground dark:text-foreground',
+                    {
+                      'self-start bg-accent text-foreground': message.newMessage.author !== userId,
+                    },
+                  )}
+                  key={message.newMessage._id}
+                >
+                  <div>{message.newMessage.content}</div>
+                  <div className="self-end text-xs">{format(message.newMessage.createdAt, 'kk:mm')}</div>
+                </div>
+              ))}
+        </div>
+
         <div ref={messagesEndRef} />
       </ScrollArea>
       <div className="h-11 w-full overflow-hidden">

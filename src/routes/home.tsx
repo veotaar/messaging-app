@@ -8,16 +8,16 @@ export const Route = createFileRoute('/home')({
 function HomeComponent() {
   return (
     <>
-      <div className="h-8 bg-background p-1 font-bold text-yellow-600">⚡Instant Messaging</div>
+      <div className="pointer-events-none h-8 bg-background p-1 font-bold text-primary">⚡Odin Messenger</div>
 
       <div className="flex bg-background">
-        <div className="flex flex-col gap-2 bg-background p-1">
+        <div className="flex flex-col gap-2 bg-background p-2">
           <Link
-            className="rounded-md hover:bg-blue-600"
+            className="rounded border border-transparent hover:bg-secondary"
             to="/home/conversations"
-            activeProps={{ className: `font-bold bg-blue-500 shadow-sm` }}
+            activeProps={{ className: `font-bold shadow-sm bg-muted border-border` }}
           >
-            <div className="p-2 text-yellow-600">
+            <div className="p-2 text-foreground">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -35,11 +35,11 @@ function HomeComponent() {
             </div>
           </Link>
           <Link
-            className="rounded-md hover:bg-blue-600"
+            className="rounded border border-transparent hover:bg-secondary"
             to="/home/friends"
-            activeProps={{ className: `font-bold bg-blue-500 shadow-sm` }}
+            activeProps={{ className: `font-bold shadow-sm bg-muted border-border` }}
           >
-            <div className="p-2 text-yellow-600">
+            <div className="p-2 text-foreground">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -57,11 +57,11 @@ function HomeComponent() {
             </div>
           </Link>
           <Link
-            className="rounded-md hover:bg-blue-600"
+            className="rounded border border-transparent hover:bg-secondary"
             to="/home/find-friends"
-            activeProps={{ className: `font-bold bg-blue-500 shadow-sm` }}
+            activeProps={{ className: `font-bold shadow-sm bg-muted border-border` }}
           >
-            <div className="p-2 text-yellow-600">
+            <div className="p-2 text-foreground">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -78,14 +78,15 @@ function HomeComponent() {
               </svg>
             </div>
           </Link>
-          <div className="self-end">
+          <div className="mb-1 mt-auto self-end">
             <ModeToggle />
           </div>
         </div>
-        <div className="h-[calc(100svh-2rem)] w-full rounded-tl-lg bg-slate-300">
+        <div className="h-[calc(100svh-2.5rem)] w-[calc(100svw-4.2rem)] rounded border bg-card">
           <Outlet />
         </div>
       </div>
+      <div className="h-2"></div>
     </>
   );
 }
