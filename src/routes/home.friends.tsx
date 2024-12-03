@@ -2,6 +2,10 @@ import { createFileRoute, redirect } from '@tanstack/react-router';
 import { friendsQueryOptions, friendRequestsQueryOptions } from '@/api/queryOptions';
 import ReceivedRequest from '@/components/ReceivedRequest';
 import SentRequest from '@/components/SentRequest';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/lib/auth';
+import { useCreateConversationMutation } from '@/api/queryOptions';
+import { queryClient } from '@/api/queryOptions';
 
 export const Route = createFileRoute('/home/friends')({
   beforeLoad: ({ context, location }) => {
@@ -27,6 +31,35 @@ export const Route = createFileRoute('/home/friends')({
 
 function Friends() {
   const loaderData = Route.useLoaderData();
+  const navigate = Route.useNavigate();
+  const createConversationMutation = useCreateConversationMutation();
+  const { token, userId } = useAuth();
+
+  const onStartMessaging = (to: string, friendName: string) => {
+    createConversationMutation.mutate(
+      {
+        to,
+        token: token as string,
+        userId: userId as string,
+      },
+      {
+        onSuccess: async (data) => {
+          await queryClient.invalidateQueries({ queryKey: ['conversations'] });
+          await queryClient.refetchQueries({ queryKey: ['conversations'] });
+
+          navigate({
+            to: '/home/conversations/$chatId',
+            params: {
+              chatId: data.conversation._id,
+            },
+            search: {
+              to: friendName,
+            },
+          });
+        },
+      },
+    );
+  };
 
   if (!loaderData) {
     return <p>loading your chats...</p>;
@@ -39,6 +72,7 @@ function Friends() {
         <div key={friend._id}>
           <p>{friend.username}</p>
           <p>{friend._id}</p>
+          <Button onClick={() => onStartMessaging(friend._id, friend.username)}>Start Messaging</Button>
         </div>
       ))}
       <h2>Received friend requests</h2>

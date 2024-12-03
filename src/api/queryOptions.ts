@@ -11,6 +11,7 @@ import {
   FriendRequestActionPayload,
 } from './getFriendRequests';
 import { sendMessage } from './sendMessage';
+import { createConversation } from './createConversation';
 import { useRouter } from '@tanstack/react-router';
 
 export const queryClient = new QueryClient();
@@ -81,6 +82,21 @@ export const useDeleteFriendRequestMutation = (payload: FriendRequestActionPaylo
         queryKey: ['user', 'friend-requests'],
       });
       await queryClient.refetchQueries({ queryKey: ['user', 'friend-requests'] });
+      await router.invalidate();
+    },
+  });
+};
+
+export const useCreateConversationMutation = () => {
+  const router = useRouter();
+  return useMutation({
+    mutationKey: ['conversations', 'create'],
+    mutationFn: createConversation,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['conversations'],
+      });
+      await queryClient.refetchQueries({ queryKey: ['conversations'] });
       await router.invalidate();
     },
   });
