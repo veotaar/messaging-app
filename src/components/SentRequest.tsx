@@ -23,10 +23,11 @@ const SentRequest = ({ request }: SentRequestProps) => {
   };
 
   return (
-    <div className="w-min border p-2">
-      <p>{request.to._id}</p>
+    <div className="mb-1 flex max-w-sm items-center justify-between gap-2 rounded border p-2 hover:bg-muted">
       <p>{request.to.username}</p>
-      <Button onClick={onDeleteRequest}>Delete</Button>
+      <Button variant={'destructive'} onClick={onDeleteRequest}>
+        Delete
+      </Button>
     </div>
   );
 };

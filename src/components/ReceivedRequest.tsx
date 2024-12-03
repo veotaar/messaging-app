@@ -34,11 +34,14 @@ const ReceivedRequest = ({ request }: ReceivedRequestProps) => {
   };
 
   return (
-    <div className="w-min border p-2">
-      <p>{request.from._id}</p>
+    <div className="mb-1 flex max-w-sm items-center gap-2 rounded border p-2 hover:bg-muted">
       <p>{request.from.username}</p>
-      <Button onClick={onAcceptRequest}>Accept</Button>
-      <Button onClick={onRejectRequest}>Reject</Button>
+      <Button className="ml-auto" onClick={onAcceptRequest}>
+        Accept
+      </Button>
+      <Button onClick={onRejectRequest} variant={'destructive'}>
+        Reject
+      </Button>
     </div>
   );
 };
