@@ -34,7 +34,7 @@ const ReceivedRequest = ({ request }: ReceivedRequestProps) => {
   };
 
   return (
-    <div className="w-min border p-2" key={request._id}>
+    <div className="w-min border p-2">
       <p>{request.from._id}</p>
       <p>{request.from.username}</p>
       <Button onClick={onAcceptRequest}>Accept</Button>

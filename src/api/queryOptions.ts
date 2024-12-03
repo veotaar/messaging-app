@@ -11,13 +11,22 @@ import {
   FriendRequestActionPayload,
 } from './getFriendRequests';
 import { sendMessage } from './sendMessage';
+import { useRouter } from '@tanstack/react-router';
 
 export const queryClient = new QueryClient();
 
 export const useMakeFriendRequestMutation = () => {
+  const router = useRouter();
   return useMutation({
     mutationKey: ['friend-request', 'create'],
     mutationFn: makeFriendRequest,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['user', 'friend-requests'],
+      });
+      await queryClient.refetchQueries({ queryKey: ['user', 'friend-requests'] });
+      await router.invalidate();
+    },
   });
 };
 
@@ -29,23 +38,51 @@ export const useSendMessageMutation = (conversationId: string) => {
 };
 
 export const useAcceptFriendRequestMutation = (payload: FriendRequestActionPayload) => {
+  const router = useRouter();
   return useMutation({
     mutationKey: ['friend-request', 'accept', { id: payload.requestId }],
     mutationFn: acceptFriendRequest,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['user', 'friend-requests'],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ['user', 'friends'],
+      });
+      await queryClient.refetchQueries({ queryKey: ['user', 'friend-requests'] });
+      await queryClient.refetchQueries({ queryKey: ['user', 'friends'] });
+      await router.invalidate();
+    },
   });
 };
 
 export const useRejectFriendRequestMutation = (payload: FriendRequestActionPayload) => {
+  const router = useRouter();
   return useMutation({
     mutationKey: ['friend-request', 'reject', { id: payload.requestId }],
     mutationFn: rejectFriendRequest,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['user', 'friend-requests'],
+      });
+      await queryClient.refetchQueries({ queryKey: ['user', 'friend-requests'] });
+      await router.invalidate();
+    },
   });
 };
 
 export const useDeleteFriendRequestMutation = (payload: FriendRequestActionPayload) => {
+  const router = useRouter();
   return useMutation({
     mutationKey: ['friend-request', 'delete', { id: payload.requestId }],
     mutationFn: deleteFriendRequest,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['user', 'friend-requests'],
+      });
+      await queryClient.refetchQueries({ queryKey: ['user', 'friend-requests'] });
+      await router.invalidate();
+    },
   });
 };
 

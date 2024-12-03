@@ -42,9 +42,9 @@ function Friends() {
         </div>
       ))}
       <h2>Received friend requests</h2>
-      {loaderData[1] && loaderData[1].received.map((req) => <ReceivedRequest request={req} />)}
+      {loaderData[1] && loaderData[1].received.map((req) => <ReceivedRequest request={req} key={req._id} />)}
       <h2>Sent friend requests</h2>
-      {loaderData[1] && loaderData[1].sent.map((req) => <SentRequest request={req} />)}
+      {loaderData[1] && loaderData[1].sent.map((req) => <SentRequest request={req} key={req._id} />)}
     </div>
   );
 }
