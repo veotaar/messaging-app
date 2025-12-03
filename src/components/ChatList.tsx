@@ -26,11 +26,11 @@ const ChatList = ({ conversations }: ConversationListResponse) => {
       <div className="flex flex-col font-semibold">
         {conversations
           .filter((conversation) => {
-            const chatWith = conversation.participants.filter((user) => user._id !== userId).at(0)?.username as string;
+            const chatWith = conversation.participants.filter((user) => user._id !== userId)[0]?.username as string;
             return chatWith.toLowerCase().includes(inputFilter.toLowerCase());
           })
           .map((conversation) => {
-            const chatWith = conversation.participants.filter((user) => user._id !== userId).at(0)?.username as string;
+            const chatWith = conversation.participants.filter((user) => user._id !== userId)[0]?.username as string;
             return (
               <Link
                 className="mb-2 rounded border border-transparent p-4 hover:bg-muted"
