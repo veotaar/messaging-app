@@ -40,7 +40,7 @@ const ChatList = ({ conversations }: ConversationListResponse) => {
                 params={{ chatId: conversation._id }}
                 search={{ to: chatWith }}
                 activeOptions={{ exact: true }}
-                activeProps={{ className: 'bg-muted border-border shadow' }}
+                activeProps={{ className: 'bg-muted border-border shadow-sm' }}
               >
                 {chatWith}
               </Link>

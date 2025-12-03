@@ -56,7 +56,7 @@ const MessageBox = ({ chatId }: { chatId: string }) => {
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex border-t" ref={formRef}>
-          <div className="flex-grow">
+          <div className="grow">
             <FormField
               control={form.control}
               name="message"

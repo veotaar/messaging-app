@@ -73,7 +73,7 @@ const LoginForm = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="mx-auto max-w-sm space-y-8 rounded border bg-card p-4 shadow-sm"
+          className="mx-auto max-w-sm space-y-8 rounded border bg-card p-4 shadow-xs"
         >
           <FormField
             control={form.control}
