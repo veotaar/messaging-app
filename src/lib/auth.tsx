@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { socket } from './socket';
+import * as React from "react";
+import { socket } from "./socket";
 
 export interface AuthContext {
   isAuthenticated: boolean;
@@ -24,7 +24,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, user, setUser, token, setToken, expires, setExpires, userId, setUserId }}
+      value={{
+        isAuthenticated,
+        user,
+        setUser,
+        token,
+        setToken,
+        expires,
+        setExpires,
+        userId,
+        setUserId,
+      }}
     >
       {children}
     </AuthContext.Provider>
@@ -36,10 +46,10 @@ export function useAuth() {
   const context = React.useContext(AuthContext);
 
   React.useEffect(() => {
-    const user = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
-    const expires = localStorage.getItem('expires');
-    const userId = localStorage.getItem('userId');
+    const user = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
+    const expires = localStorage.getItem("expires");
+    const userId = localStorage.getItem("userId");
 
     if (user && token && expires && userId) {
       const expiresNum = parseInt(expires, 10);
@@ -52,16 +62,16 @@ export function useAuth() {
         context?.setUserId(userId);
         socket.connect();
       } else {
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        localStorage.removeItem('expires');
-        localStorage.removeItem('userId');
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        localStorage.removeItem("expires");
+        localStorage.removeItem("userId");
       }
     }
   }, [context]);
 
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }

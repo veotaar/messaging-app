@@ -24,16 +24,18 @@ export type loginRegisterResponse = {
   };
 };
 
-export const registerUser = async (credentials: registerCredentials): Promise<loginRegisterResponse> => {
+export const registerUser = async (
+  credentials: registerCredentials,
+): Promise<loginRegisterResponse> => {
   const url = `${BASE_URL}/users`;
 
   const response = await fetch(url, {
-    method: 'POST',
-    mode: 'cors',
+    method: "POST",
+    mode: "cors",
     body: JSON.stringify(credentials),
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
   });
 
@@ -44,16 +46,18 @@ export const registerUser = async (credentials: registerCredentials): Promise<lo
   return response.json();
 };
 
-export const loginUser = async (credentials: loginCredentials): Promise<loginRegisterResponse> => {
+export const loginUser = async (
+  credentials: loginCredentials,
+): Promise<loginRegisterResponse> => {
   const url = `${BASE_URL}/login`;
 
   const response = await fetch(url, {
-    method: 'POST',
-    mode: 'cors',
+    method: "POST",
+    mode: "cors",
     body: JSON.stringify(credentials),
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
   });
 

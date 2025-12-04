@@ -13,16 +13,19 @@ export type ConversationListResponse = {
   conversations: ConversationPreview[];
 };
 
-export const getConversations = async (userId: string, token: string): Promise<ConversationListResponse> => {
+export const getConversations = async (
+  userId: string,
+  token: string,
+): Promise<ConversationListResponse> => {
   const url = `${BASE_URL}/users/${userId}/conversations`;
 
   const response = await fetch(url, {
-    method: 'GET',
-    mode: 'cors',
+    method: "GET",
+    mode: "cors",
     headers: {
       Authorization: token,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
   });
 

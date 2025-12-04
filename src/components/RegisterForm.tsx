@@ -1,14 +1,20 @@
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-
-import { registerUser } from '@/api/login';
-import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from '@tanstack/react-router';
-import { useAuth } from '@/lib/auth';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { registerUser } from "@/api/login";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useAuth } from "@/lib/auth";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -21,14 +27,15 @@ const RegisterForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-      username: '',
-      password: '',
-      passwordConfirm: '',
+      email: "",
+      username: "",
+      password: "",
+      passwordConfirm: "",
     },
   });
 
-  const { setUser, setToken, isAuthenticated, setExpires, setUserId } = useAuth();
+  const { setUser, setToken, isAuthenticated, setExpires, setUserId } =
+    useAuth();
   const navigate = useNavigate();
   const {
     mutate: loginMutate,
@@ -46,17 +53,17 @@ const RegisterForm = () => {
         setUser(user);
         setExpires(expires);
         setUserId(userId);
-        localStorage.setItem('user', user);
-        localStorage.setItem('token', token);
-        localStorage.setItem('expires', expires.toString());
-        localStorage.setItem('userId', userId);
+        localStorage.setItem("user", user);
+        localStorage.setItem("token", token);
+        localStorage.setItem("expires", expires.toString());
+        localStorage.setItem("userId", userId);
       }
-      setTimeout(() => navigate({ to: '/home/conversations' }), 0);
+      setTimeout(() => navigate({ to: "/home/conversations" }), 0);
     },
     onError: (error) => {
       console.error(error);
       form.reset();
-      form.setFocus('email');
+      form.setFocus("email");
     },
   });
 
@@ -132,11 +139,15 @@ const RegisterForm = () => {
             )}
           />
           <Button type="submit" disabled={isPending}>
-            {isPending ? 'Loading...' : 'Register'}
+            {isPending ? "Loading..." : "Register"}
           </Button>
         </form>
       </Form>
-      {isError && <p className="mx-auto mt-4 max-w-sm text-red-500">Something went wrong</p>}
+      {isError && (
+        <p className="mx-auto mt-4 max-w-sm text-red-500">
+          Something went wrong
+        </p>
+      )}
     </>
   );
 };

@@ -1,7 +1,10 @@
-import { ReceivedRequest as Request } from '@/api/getFriendRequests';
-import { useAcceptFriendRequestMutation, useRejectFriendRequestMutation } from '@/api/queryOptions';
-import { useAuth } from '@/lib/auth';
-import { Button } from './ui/button';
+import type { ReceivedRequest as Request } from "@/api/getFriendRequests";
+import {
+  useAcceptFriendRequestMutation,
+  useRejectFriendRequestMutation,
+} from "@/api/queryOptions";
+import { useAuth } from "@/lib/auth";
+import { Button } from "./ui/button";
 
 type ReceivedRequestProps = {
   request: Request;
@@ -39,7 +42,7 @@ const ReceivedRequest = ({ request }: ReceivedRequestProps) => {
       <Button className="ml-auto" onClick={onAcceptRequest}>
         Accept
       </Button>
-      <Button onClick={onRejectRequest} variant={'destructive'}>
+      <Button onClick={onRejectRequest} variant={"destructive"}>
         Reject
       </Button>
     </div>

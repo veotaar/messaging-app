@@ -1,12 +1,12 @@
-import { createFileRoute, redirect, Outlet } from '@tanstack/react-router';
-import { conversationsQueryOptions } from '@/api/queryOptions';
-import ChatList from '@/components/ChatList';
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { conversationsQueryOptions } from "@/api/queryOptions";
+import ChatList from "@/components/ChatList";
 
-export const Route = createFileRoute('/home/conversations')({
+export const Route = createFileRoute("/home/conversations")({
   beforeLoad: ({ context, location }) => {
     if (!context.auth.isAuthenticated) {
       throw redirect({
-        to: '/login',
+        to: "/login",
         search: {
           redirect: location.href,
         },
@@ -16,7 +16,9 @@ export const Route = createFileRoute('/home/conversations')({
   component: Conversations,
   loader: async ({ context }) => {
     const { userId, token } = context.auth;
-    return await context.queryClient.ensureQueryData(conversationsQueryOptions(userId as string, token as string));
+    return await context.queryClient.ensureQueryData(
+      conversationsQueryOptions(userId as string, token as string),
+    );
   },
 });
 

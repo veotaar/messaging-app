@@ -1,7 +1,7 @@
-import { io, Socket } from 'socket.io-client';
-import { NewMessageResponse } from '@/api/sendMessage';
+import { io, type Socket } from "socket.io-client";
+import type { NewMessageResponse } from "@/api/sendMessage";
 
-const URL = 'http://localhost:1337';
+const URL = "http://localhost:1337";
 
 interface ServerToClientEvents {
   newMessage: (message: NewMessageResponse) => void;
@@ -14,6 +14,9 @@ interface ClientToServerEvents {
   join: (userId: string | null) => void;
 }
 
-export const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(URL, {
-  autoConnect: false,
-});
+export const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
+  URL,
+  {
+    autoConnect: false,
+  },
+);

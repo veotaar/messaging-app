@@ -1,21 +1,32 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
-import { useQuery } from '@tanstack/react-query';
-import { findUserByEmail } from '@/api/findUserByEmail';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { useState } from 'react';
-import { useAuth } from '@/lib/auth';
-import { useMakeFriendRequestMutation, friendsQueryOptions, friendRequestsQueryOptions } from '@/api/queryOptions';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { findUserByEmail } from "@/api/findUserByEmail";
+import {
+  friendRequestsQueryOptions,
+  friendsQueryOptions,
+  useMakeFriendRequestMutation,
+} from "@/api/queryOptions";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useAuth } from "@/lib/auth";
 
-export const Route = createFileRoute('/home/find-friends')({
+export const Route = createFileRoute("/home/find-friends")({
   beforeLoad: ({ context, location }) => {
     if (!context.auth.isAuthenticated) {
       throw redirect({
-        to: '/login',
+        to: "/login",
         search: {
           redirect: location.href,
         },
@@ -27,8 +38,12 @@ export const Route = createFileRoute('/home/find-friends')({
     const { userId, token } = context.auth;
     // return await context.queryClient.ensureQueryData(friendsQueryOptions(userId as string, token as string));
     return await Promise.all([
-      context.queryClient.ensureQueryData(friendsQueryOptions(userId as string, token as string)),
-      context.queryClient.ensureQueryData(friendRequestsQueryOptions(userId as string, token as string)),
+      context.queryClient.ensureQueryData(
+        friendsQueryOptions(userId as string, token as string),
+      ),
+      context.queryClient.ensureQueryData(
+        friendRequestsQueryOptions(userId as string, token as string),
+      ),
     ]);
   },
 });
@@ -40,14 +55,16 @@ const formSchema = z.object({
 function HomeFriendsComponent() {
   const loaderData = Route.useLoaderData();
   const [emailToSearch, setEmailToSearch] = useState<string | null>(null);
-  const [addFriendButtonText, setAddFriendButtonText] = useState('Send Friend Request');
+  const [addFriendButtonText, setAddFriendButtonText] = useState(
+    "Send Friend Request",
+  );
 
   const makeFriendRequestMutation = useMakeFriendRequestMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
+      email: "",
     },
   });
 
@@ -65,17 +82,17 @@ function HomeFriendsComponent() {
       },
       {
         onError: () => {
-          setAddFriendButtonText('cannot send request');
+          setAddFriendButtonText("cannot send request");
         },
         onSuccess: () => {
-          setAddFriendButtonText('request sent!');
+          setAddFriendButtonText("request sent!");
         },
       },
     );
   };
 
   const { isLoading, data: foundUser } = useQuery({
-    queryKey: ['find-user', { email: emailToSearch }],
+    queryKey: ["find-user", { email: emailToSearch }],
     queryFn: () => findUserByEmail(emailToSearch as string, token as string),
     retry: false,
     enabled: !!emailToSearch,
@@ -84,7 +101,10 @@ function HomeFriendsComponent() {
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="mx-auto max-w-sm space-y-8 bg-card p-4">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="mx-auto max-w-sm space-y-8 bg-card p-4"
+        >
           <FormField
             control={form.control}
             name="email"
@@ -92,7 +112,11 @@ function HomeFriendsComponent() {
               <FormItem>
                 <FormLabel>Find user by email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="your-friends-email@example.com" {...field} />
+                  <Input
+                    type="email"
+                    placeholder="your-friends-email@example.com"
+                    {...field}
+                  />
                 </FormControl>
                 {/* <FormDescription>Type your email</FormDescription> */}
                 <FormMessage />
@@ -100,7 +124,7 @@ function HomeFriendsComponent() {
             )}
           />
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? 'Loading...' : 'Find User'}
+            {isLoading ? "Loading..." : "Find User"}
           </Button>
         </form>
       </Form>
@@ -117,8 +141,12 @@ function HomeFriendsComponent() {
                 makeFriendRequestMutation.isError ||
                 makeFriendRequestMutation.isSuccess ||
                 foundUser.user._id === userId ||
-                !!loaderData[0].friends.find((friend) => friend._id === foundUser.user._id) ||
-                !!loaderData[1].sent.find((req) => req.to._id === foundUser.user._id)
+                !!loaderData[0].friends.find(
+                  (friend) => friend._id === foundUser.user._id,
+                ) ||
+                !!loaderData[1].sent.find(
+                  (req) => req.to._id === foundUser.user._id,
+                )
               }
             >
               {addFriendButtonText}

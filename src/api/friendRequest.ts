@@ -13,17 +13,19 @@ type FriendRequestResponse = {
   };
 };
 
-export const makeFriendRequest = async (friendRequest: friendRequestPayload): Promise<FriendRequestResponse> => {
+export const makeFriendRequest = async (
+  friendRequest: friendRequestPayload,
+): Promise<FriendRequestResponse> => {
   const url = `${BASE_URL}/friend-requests`;
 
   const response = await fetch(url, {
-    method: 'POST',
-    mode: 'cors',
+    method: "POST",
+    mode: "cors",
     body: JSON.stringify({ to: friendRequest.to }),
     headers: {
       Authorization: friendRequest.token,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
   });
 

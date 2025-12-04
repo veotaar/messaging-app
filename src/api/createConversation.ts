@@ -15,16 +15,18 @@ type CreateConversationResponse = {
   };
 };
 
-export const createConversation = async (payload: createConversationPayload): Promise<CreateConversationResponse> => {
+export const createConversation = async (
+  payload: createConversationPayload,
+): Promise<CreateConversationResponse> => {
   const url = `${BASE_URL}/conversations/${payload.userId}/${payload.to}`;
 
   const response = await fetch(url, {
-    method: 'POST',
-    mode: 'cors',
+    method: "POST",
+    mode: "cors",
     headers: {
       Authorization: payload.token,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
   });
 

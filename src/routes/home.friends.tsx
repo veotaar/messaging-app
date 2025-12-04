@@ -1,17 +1,20 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
-import { friendsQueryOptions, friendRequestsQueryOptions } from '@/api/queryOptions';
-import ReceivedRequest from '@/components/ReceivedRequest';
-import SentRequest from '@/components/SentRequest';
-import { Button } from '@/components/ui/button';
-import { useAuth } from '@/lib/auth';
-import { useCreateConversationMutation } from '@/api/queryOptions';
-import { queryClient } from '@/api/queryOptions';
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import {
+  friendRequestsQueryOptions,
+  friendsQueryOptions,
+  queryClient,
+  useCreateConversationMutation,
+} from "@/api/queryOptions";
+import ReceivedRequest from "@/components/ReceivedRequest";
+import SentRequest from "@/components/SentRequest";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/auth";
 
-export const Route = createFileRoute('/home/friends')({
+export const Route = createFileRoute("/home/friends")({
   beforeLoad: ({ context, location }) => {
     if (!context.auth.isAuthenticated) {
       throw redirect({
-        to: '/login',
+        to: "/login",
         search: {
           redirect: location.href,
         },
@@ -23,8 +26,12 @@ export const Route = createFileRoute('/home/friends')({
     const { userId, token } = context.auth;
     // return await context.queryClient.ensureQueryData(friendsQueryOptions(userId as string, token as string));
     return await Promise.all([
-      context.queryClient.ensureQueryData(friendsQueryOptions(userId as string, token as string)),
-      context.queryClient.ensureQueryData(friendRequestsQueryOptions(userId as string, token as string)),
+      context.queryClient.ensureQueryData(
+        friendsQueryOptions(userId as string, token as string),
+      ),
+      context.queryClient.ensureQueryData(
+        friendRequestsQueryOptions(userId as string, token as string),
+      ),
     ]);
   },
 });
@@ -44,11 +51,11 @@ function Friends() {
       },
       {
         onSuccess: async (data) => {
-          await queryClient.invalidateQueries({ queryKey: ['conversations'] });
-          await queryClient.refetchQueries({ queryKey: ['conversations'] });
+          await queryClient.invalidateQueries({ queryKey: ["conversations"] });
+          await queryClient.refetchQueries({ queryKey: ["conversations"] });
 
           navigate({
-            to: '/home/conversations/$chatId',
+            to: "/home/conversations/$chatId",
             params: {
               chatId: data.conversation._id,
             },
@@ -67,15 +74,20 @@ function Friends() {
 
   return (
     <div className="mx-auto max-w-sm bg-card p-4">
-      <h2 className="text-lg font-bold">Your friends</h2>
-      {loaderData[0].friends.length === 0 && <div className="rounded border p-2">You don't have any friends yet</div>}
+      <h2 className="font-bold text-lg">Your friends</h2>
+      {loaderData[0].friends.length === 0 && (
+        <div className="rounded border p-2">You don't have any friends yet</div>
+      )}
       {loaderData[0].friends.map((friend) => (
         <div
           key={friend._id}
           className="mb-1 flex items-center justify-between gap-2 rounded border bg-card px-2 py-1 hover:bg-muted/50"
         >
           <p>{friend.username}</p>
-          <Button variant={'outline'} onClick={() => onStartMessaging(friend._id, friend.username)}>
+          <Button
+            variant={"outline"}
+            onClick={() => onStartMessaging(friend._id, friend.username)}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -84,6 +96,7 @@ function Friends() {
               stroke="currentColor"
               className="size-6"
             >
+              <title>start chat</title>
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -93,16 +106,26 @@ function Friends() {
           </Button>
         </div>
       ))}
-      <h2 className="mt-6 text-lg font-bold">Received friend requests</h2>
+      <h2 className="mt-6 font-bold text-lg">Received friend requests</h2>
       {loaderData[1].received.length === 0 && (
-        <div className="rounded border p-2">Received friend requests will be shown here</div>
+        <div className="rounded border p-2">
+          Received friend requests will be shown here
+        </div>
       )}
-      {loaderData[1] && loaderData[1].received.map((req) => <ReceivedRequest request={req} key={req._id} />)}
-      <h2 className="mt-2 text-lg font-bold">Sent friend requests</h2>
+      {loaderData[1] &&
+        loaderData[1].received.map((req) => (
+          <ReceivedRequest request={req} key={req._id} />
+        ))}
+      <h2 className="mt-2 font-bold text-lg">Sent friend requests</h2>
       {loaderData[1].sent.length === 0 && (
-        <div className="rounded border p-2">Sent friend requests will be shown here</div>
+        <div className="rounded border p-2">
+          Sent friend requests will be shown here
+        </div>
       )}
-      {loaderData[1] && loaderData[1].sent.map((req) => <SentRequest request={req} key={req._id} />)}
+      {loaderData[1] &&
+        loaderData[1].sent.map((req) => (
+          <SentRequest request={req} key={req._id} />
+        ))}
     </div>
   );
 }

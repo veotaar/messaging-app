@@ -1,12 +1,12 @@
-import { ConversationListResponse } from '@/api/getConversations';
-import { useAuth } from '@/lib/auth';
-import { useState } from 'react';
-import { Link } from '@tanstack/react-router';
-import { Input } from './ui/input';
+import { Link } from "@tanstack/react-router";
+import { useState } from "react";
+import type { ConversationListResponse } from "@/api/getConversations";
+import { useAuth } from "@/lib/auth";
+import { Input } from "./ui/input";
 
 const ChatList = ({ conversations }: ConversationListResponse) => {
   const { userId } = useAuth();
-  const [inputFilter, setInputFilter] = useState('');
+  const [inputFilter, setInputFilter] = useState("");
 
   if (conversations.length === 0) {
     return <div>you dont have any conversations yet</div>;
@@ -14,7 +14,7 @@ const ChatList = ({ conversations }: ConversationListResponse) => {
 
   return (
     <div>
-      <div className="p-2 text-lg font-bold">
+      <div className="p-2 font-bold text-lg">
         <h2>Conversations</h2>
       </div>
       <Input
@@ -26,11 +26,15 @@ const ChatList = ({ conversations }: ConversationListResponse) => {
       <div className="flex flex-col font-semibold">
         {conversations
           .filter((conversation) => {
-            const chatWith = conversation.participants.filter((user) => user._id !== userId)[0]?.username as string;
+            const chatWith = conversation.participants.filter(
+              (user) => user._id !== userId,
+            )[0]?.username as string;
             return chatWith.toLowerCase().includes(inputFilter.toLowerCase());
           })
           .map((conversation) => {
-            const chatWith = conversation.participants.filter((user) => user._id !== userId)[0]?.username as string;
+            const chatWith = conversation.participants.filter(
+              (user) => user._id !== userId,
+            )[0]?.username as string;
             return (
               <Link
                 className="mb-2 rounded border border-transparent p-4 hover:bg-muted"
@@ -40,7 +44,7 @@ const ChatList = ({ conversations }: ConversationListResponse) => {
                 params={{ chatId: conversation._id }}
                 search={{ to: chatWith }}
                 activeOptions={{ exact: true }}
-                activeProps={{ className: 'bg-muted border-border shadow-sm' }}
+                activeProps={{ className: "bg-muted border-border shadow-sm" }}
               >
                 {chatWith}
               </Link>

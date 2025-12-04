@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
-import { socket } from '@/lib/socket';
-import { NewMessageResponse } from '@/api/sendMessage';
+import { useEffect, useState } from "react";
+import type { NewMessageResponse } from "@/api/sendMessage";
+import { socket } from "@/lib/socket";
 
 const useSocket = () => {
   const [isConnected, setIsConnected] = useState(socket.connected);
-  const [liveMessages, setLiveMessages] = useState<null | NewMessageResponse[]>(null);
+  const [liveMessages, setLiveMessages] = useState<null | NewMessageResponse[]>(
+    null,
+  );
 
   useEffect(() => {
     function onConnect() {
@@ -23,14 +25,14 @@ const useSocket = () => {
       }
     }
 
-    socket.on('connect', onConnect);
-    socket.on('disconnect', onDisconnect);
-    socket.on('newMessage', onNewMessage);
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    socket.on("newMessage", onNewMessage);
 
     return () => {
-      socket.off('connect', onConnect);
-      socket.off('disconnect', onDisconnect);
-      socket.off('newMessage', onNewMessage);
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("newMessage", onNewMessage);
     };
   }, [liveMessages]);
 

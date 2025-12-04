@@ -1,21 +1,25 @@
-import { ModeToggle } from '@/components/ModeToggle';
-import { createFileRoute, Link, Outlet } from '@tanstack/react-router';
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { ModeToggle } from "@/components/ModeToggle";
 
-export const Route = createFileRoute('/home')({
+export const Route = createFileRoute("/home")({
   component: HomeComponent,
 });
 
 function HomeComponent() {
   return (
     <>
-      <div className="pointer-events-none h-8 bg-background p-1 font-bold text-primary">⚡Odin Messenger</div>
+      <div className="pointer-events-none h-8 bg-background p-1 font-bold text-primary">
+        ⚡Odin Messenger
+      </div>
 
       <div className="flex bg-background">
         <div className="flex flex-col gap-2 bg-background p-2">
           <Link
             className="rounded border border-transparent hover:bg-secondary"
             to="/home/conversations"
-            activeProps={{ className: `font-bold shadow-sm bg-muted border-border` }}
+            activeProps={{
+              className: `font-bold shadow-sm bg-muted border-border`,
+            }}
           >
             <div className="p-2 text-foreground">
               <svg
@@ -26,6 +30,7 @@ function HomeComponent() {
                 stroke="currentColor"
                 className="size-6"
               >
+                <title>chats</title>
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -37,7 +42,9 @@ function HomeComponent() {
           <Link
             className="rounded border border-transparent hover:bg-secondary"
             to="/home/friends"
-            activeProps={{ className: `font-bold shadow-sm bg-muted border-border` }}
+            activeProps={{
+              className: `font-bold shadow-sm bg-muted border-border`,
+            }}
           >
             <div className="p-2 text-foreground">
               <svg
@@ -48,6 +55,7 @@ function HomeComponent() {
                 stroke="currentColor"
                 className="size-6"
               >
+                <title>friends</title>
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -59,7 +67,9 @@ function HomeComponent() {
           <Link
             className="rounded border border-transparent hover:bg-secondary"
             to="/home/find-friends"
-            activeProps={{ className: `font-bold shadow-sm bg-muted border-border` }}
+            activeProps={{
+              className: `font-bold shadow-sm bg-muted border-border`,
+            }}
           >
             <div className="p-2 text-foreground">
               <svg
@@ -70,6 +80,7 @@ function HomeComponent() {
                 stroke="currentColor"
                 className="size-6"
               >
+                <title>add friends</title>
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -78,7 +89,7 @@ function HomeComponent() {
               </svg>
             </div>
           </Link>
-          <div className="mb-1 mt-auto self-end">
+          <div className="mt-auto mb-1 self-end">
             <ModeToggle />
           </div>
         </div>

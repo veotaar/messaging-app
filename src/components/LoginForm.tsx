@@ -1,16 +1,22 @@
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { Navigate, useNavigate } from "@tanstack/react-router";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { loginUser } from '@/api/login';
-import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from '@tanstack/react-router';
-import { useAuth } from '@/lib/auth';
-import { Navigate } from '@tanstack/react-router';
-import { socket } from '@/lib/socket';
+import { loginUser } from "@/api/login";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useAuth } from "@/lib/auth";
+import { socket } from "@/lib/socket";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -21,12 +27,13 @@ const LoginForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   });
 
-  const { setUser, setToken, isAuthenticated, setExpires, setUserId } = useAuth();
+  const { setUser, setToken, isAuthenticated, setExpires, setUserId } =
+    useAuth();
   const navigate = useNavigate();
   const {
     mutate: loginMutate,
@@ -45,18 +52,18 @@ const LoginForm = () => {
         setUser(user);
         setExpires(expires);
         setUserId(userId);
-        localStorage.setItem('user', user);
-        localStorage.setItem('token', token);
-        localStorage.setItem('expires', expires.toString());
-        localStorage.setItem('userId', userId);
+        localStorage.setItem("user", user);
+        localStorage.setItem("token", token);
+        localStorage.setItem("expires", expires.toString());
+        localStorage.setItem("userId", userId);
       }
 
-      setTimeout(() => navigate({ to: '/home/conversations' }), 0);
+      setTimeout(() => navigate({ to: "/home/conversations" }), 0);
     },
     onError: (error) => {
       console.error(error);
-      form.resetField('password');
-      form.setFocus('password');
+      form.resetField("password");
+      form.setFocus("password");
     },
   });
 
@@ -104,11 +111,15 @@ const LoginForm = () => {
             )}
           />
           <Button type="submit" disabled={isPending}>
-            {isPending ? 'Loading...' : 'Login'}
+            {isPending ? "Loading..." : "Login"}
           </Button>
         </form>
       </Form>
-      {isError && <p className="mx-auto mt-4 max-w-sm text-red-500">Something went wrong</p>}
+      {isError && (
+        <p className="mx-auto mt-4 max-w-sm text-red-500">
+          Something went wrong
+        </p>
+      )}
     </>
   );
 };

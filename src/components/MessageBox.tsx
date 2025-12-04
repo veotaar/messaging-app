@@ -1,13 +1,13 @@
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
-import { Textarea } from './ui/textarea';
-import { Button } from '@/components/ui/button';
-import { useAuth } from '@/lib/auth';
-import { useSendMessageMutation } from '@/api/queryOptions';
-import { socket } from '@/lib/socket';
-import { useRef } from 'react';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRef } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { useSendMessageMutation } from "@/api/queryOptions";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { useAuth } from "@/lib/auth";
+import { socket } from "@/lib/socket";
+import { Textarea } from "./ui/textarea";
 
 const formSchema = z.object({
   message: z.string().min(1),
@@ -17,7 +17,7 @@ const MessageBox = ({ chatId }: { chatId: string }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      message: '',
+      message: "",
     },
   });
 
@@ -38,7 +38,7 @@ const MessageBox = ({ chatId }: { chatId: string }) => {
         onSuccess: (data) => {
           form.reset();
           if (socket) {
-            socket.emit('sendMessage', data);
+            socket.emit("sendMessage", data);
           }
         },
       },
@@ -46,16 +46,22 @@ const MessageBox = ({ chatId }: { chatId: string }) => {
   };
 
   const onEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key !== 'Enter') return;
+    if (e.key !== "Enter") return;
     if (e.shiftKey) return;
     e.preventDefault();
-    formRef.current?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    formRef.current?.dispatchEvent(
+      new Event("submit", { cancelable: true, bubbles: true }),
+    );
   };
 
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex border-t" ref={formRef}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex border-t"
+          ref={formRef}
+        >
           <div className="grow">
             <FormField
               control={form.control}
@@ -77,15 +83,19 @@ const MessageBox = ({ chatId }: { chatId: string }) => {
           </div>
           <Button
             type="submit"
-            variant={'ghost'}
+            variant={"ghost"}
             disabled={isPending || !form.formState.isDirty}
             className="self-center"
           >
-            {isPending ? 'Sending...' : 'Send'}
+            {isPending ? "Sending..." : "Send"}
           </Button>
         </form>
       </Form>
-      {isError && <p className="mx-auto mt-4 max-w-sm text-red-500">Something went wrong</p>}
+      {isError && (
+        <p className="mx-auto mt-4 max-w-sm text-red-500">
+          Something went wrong
+        </p>
+      )}
     </>
   );
 };

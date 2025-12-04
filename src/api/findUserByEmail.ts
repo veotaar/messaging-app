@@ -8,16 +8,19 @@ export type FindByEmailResponse = {
   };
 };
 
-export const findUserByEmail = async (email: string, token: string): Promise<FindByEmailResponse> => {
+export const findUserByEmail = async (
+  email: string,
+  token: string,
+): Promise<FindByEmailResponse> => {
   const url = `${BASE_URL}/users?email=${email}`;
 
   const response = await fetch(url, {
-    method: 'GET',
-    mode: 'cors',
+    method: "GET",
+    mode: "cors",
     headers: {
       Authorization: token,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
   });
 

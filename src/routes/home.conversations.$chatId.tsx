@@ -1,27 +1,27 @@
-import * as React from 'react';
-import { createFileRoute, redirect } from '@tanstack/react-router';
-import MessageBox from '@/components/MessageBox';
-import { useAuth } from '@/lib/auth';
-import useMessages from '@/hooks/useMessages';
-import { Button } from '@/components/ui/button';
-import useSocket from '@/hooks/useSocket';
-import { socket } from '@/lib/socket';
-import { z } from 'zod';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { format } from "date-fns";
+import * as React from "react";
+import { z } from "zod";
+import MessageBox from "@/components/MessageBox";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import useMessages from "@/hooks/useMessages";
+import useSocket from "@/hooks/useSocket";
+import { useAuth } from "@/lib/auth";
+import { socket } from "@/lib/socket";
+import { cn } from "@/lib/utils";
 
 const chatSearchSchema = z.object({
   to: z.string(),
 });
 
-export const Route = createFileRoute('/home/conversations/$chatId')({
+export const Route = createFileRoute("/home/conversations/$chatId")({
   component: Chat,
   validateSearch: chatSearchSchema,
   beforeLoad: ({ context, location }) => {
     if (!context.auth.isAuthenticated) {
       throw redirect({
-        to: '/login',
+        to: "/login",
         search: {
           redirect: location.href,
         },
@@ -39,7 +39,7 @@ function Chat() {
   const messagesEndRef = React.useRef<null | HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'instant' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
   };
 
   const {
@@ -53,8 +53,9 @@ function Chat() {
     status,
   } = useMessages(chatId, token as string);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: r
   React.useEffect(() => {
-    socket.emit('joinChat', chatId);
+    socket.emit("joinChat", chatId);
     scrollToBottom();
   }, [chatId]);
 
@@ -73,11 +74,12 @@ function Chat() {
     }
   }, [data, hasPreviousPage, fetchPreviousPage, hasNextPage, fetchNextPage]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: r
   React.useEffect(() => {
     scrollToBottom();
   }, [liveMessages]);
 
-  if (status === 'pending') {
+  if (status === "pending") {
     return (
       <div>
         <p>Loading chat...</p>
@@ -85,7 +87,7 @@ function Chat() {
     );
   }
 
-  if (status === 'error') {
+  if (status === "error") {
     return (
       <div>
         <p>Error: {error.message}</p>
@@ -103,27 +105,30 @@ function Chat() {
           className={cn({ hidden: !hasPreviousPage })}
         >
           {isFetchingPreviousPage
-            ? 'Loading previous messages'
+            ? "Loading previous messages"
             : hasPreviousPage
-              ? 'Load More'
-              : 'Nothing more to load'}
+              ? "Load More"
+              : "Nothing more to load"}
         </Button>
         <div className="mb-[0.05rem] flex flex-col gap-[0.05rem]">
-          {data.pages.map((group, i) => (
-            <div key={i}>
+          {data.pages.map((group, _i) => (
+            <div key={group.messagesData.messages[0]._id}>
               <div className="flex flex-col items-end gap-[0.1rem] whitespace-pre-wrap">
                 {group.messagesData.messages.map((message) => (
                   <div
                     className={cn(
-                      'flex gap-4 rounded-md bg-primary px-2 py-2 text-primary-foreground dark:text-foreground',
+                      "flex gap-4 rounded-md bg-primary px-2 py-2 text-primary-foreground dark:text-foreground",
                       {
-                        'self-start bg-accent text-foreground': message.author._id !== userId,
+                        "self-start bg-accent text-foreground":
+                          message.author._id !== userId,
                       },
                     )}
                     key={message._id}
                   >
                     <div>{message.content}</div>
-                    <div className="self-end text-xs">{format(message.createdAt, 'kk:mm')}</div>
+                    <div className="self-end text-xs">
+                      {format(message.createdAt, "kk:mm")}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -137,15 +142,18 @@ function Chat() {
               .map((message) => (
                 <div
                   className={cn(
-                    'flex gap-4 rounded-md bg-primary px-2 py-2 text-primary-foreground dark:text-foreground',
+                    "flex gap-4 rounded-md bg-primary px-2 py-2 text-primary-foreground dark:text-foreground",
                     {
-                      'self-start bg-accent text-foreground': message.newMessage.author !== userId,
+                      "self-start bg-accent text-foreground":
+                        message.newMessage.author !== userId,
                     },
                   )}
                   key={message.newMessage._id}
                 >
                   <div>{message.newMessage.content}</div>
-                  <div className="self-end text-xs">{format(message.newMessage.createdAt, 'kk:mm')}</div>
+                  <div className="self-end text-xs">
+                    {format(message.newMessage.createdAt, "kk:mm")}
+                  </div>
                 </div>
               ))}
         </div>

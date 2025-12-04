@@ -35,12 +35,12 @@ export const getMessages = async ({
   const url = `${BASE_URL}/conversations/${chatId}/messages?page=${pageParam}`;
 
   const response = await fetch(url, {
-    method: 'GET',
-    mode: 'cors',
+    method: "GET",
+    mode: "cors",
     headers: {
       Authorization: token,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
   });
 

@@ -17,17 +17,19 @@ export type NewMessagePayload = {
   content: string;
 };
 
-export const sendMessage = async (newMessage: NewMessagePayload): Promise<NewMessageResponse> => {
+export const sendMessage = async (
+  newMessage: NewMessagePayload,
+): Promise<NewMessageResponse> => {
   const url = `${BASE_URL}/conversations/${newMessage.conversationId}`;
 
   const response = await fetch(url, {
-    method: 'PUT',
-    mode: 'cors',
+    method: "PUT",
+    mode: "cors",
     body: JSON.stringify({ content: newMessage.content }),
     headers: {
       Authorization: newMessage.token,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
   });
 
