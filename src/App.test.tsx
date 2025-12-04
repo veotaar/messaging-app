@@ -1,8 +1,13 @@
-import { render, screen } from "@testing-library/react";
-import App from "./App.tsx";
+/// <reference lib="dom" />
 
-it("should have hello world", () => {
-  render(<App />);
-  const message = screen.queryByText(/Hello World/i);
-  expect(message).toBeVisible();
+import { expect, test } from "bun:test";
+import { render, screen } from "@testing-library/react";
+
+function Button({ children }: { children: React.ReactNode }) {
+  return <button type="button">{children}</button>;
+}
+
+test("renders button", () => {
+  render(<Button>Click me</Button>);
+  expect(screen.getByRole("button").textContent).toBe("Click me");
 });
