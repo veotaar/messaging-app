@@ -1,11 +1,21 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { ModeToggle } from "@/components/ModeToggle";
+import useSocket from "@/hooks/useSocket";
 
 export const Route = createFileRoute("/home")({
   component: HomeComponent,
 });
 
 function HomeComponent() {
+  const { queryClient } = Route.useRouteContext();
+  const { setLiveMessages } = useSocket();
+
+  // clear live messages
+  const clearLiveMessages = () => {
+    queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    setLiveMessages([]);
+  };
+
   return (
     <>
       <div className="pointer-events-none h-8 bg-background p-1 font-bold text-primary">
@@ -20,6 +30,7 @@ function HomeComponent() {
             activeProps={{
               className: `font-bold shadow-sm bg-muted border-border`,
             }}
+            onClick={() => clearLiveMessages()}
           >
             <div className="p-2 text-foreground">
               <svg
@@ -45,6 +56,7 @@ function HomeComponent() {
             activeProps={{
               className: `font-bold shadow-sm bg-muted border-border`,
             }}
+            onClick={() => clearLiveMessages()}
           >
             <div className="p-2 text-foreground">
               <svg
@@ -70,6 +82,7 @@ function HomeComponent() {
             activeProps={{
               className: `font-bold shadow-sm bg-muted border-border`,
             }}
+            onClick={() => clearLiveMessages()}
           >
             <div className="p-2 text-foreground">
               <svg

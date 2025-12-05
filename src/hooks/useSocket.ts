@@ -39,6 +39,7 @@ const useSocket = () => {
   return {
     isConnected,
     liveMessages,
+    setLiveMessages,
   };
 };
 
