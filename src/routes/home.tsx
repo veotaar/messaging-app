@@ -17,10 +17,10 @@ function HomeComponent() {
   };
 
   return (
-    <>
-      <div className="pointer-events-none h-8 bg-background p-1 font-bold text-primary">
+    <div className="pt-5">
+      {/* <div className="pointer-events-none h-8 bg-background p-1 font-bold text-primary">
         ⚡Odin Messenger
-      </div>
+      </div> */}
 
       <div className="flex bg-background">
         <div className="flex flex-col gap-2 bg-background p-2">
@@ -111,6 +111,6 @@ function HomeComponent() {
         </div>
       </div>
       <div className="h-2"></div>
-    </>
+    </div>
   );
 }

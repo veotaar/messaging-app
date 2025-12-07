@@ -111,29 +111,30 @@ function Chat() {
               : "Nothing more to load"}
         </Button>
         <div className="mb-[0.05rem] flex flex-col gap-[0.05rem]">
-          {data.pages.map((group, _i) => (
-            <div key={group.messagesData.messages[0]._id}>
-              <div className="flex flex-col items-end gap-[0.1rem] whitespace-pre-wrap">
-                {group.messagesData.messages.map((message) => (
-                  <div
-                    className={cn(
-                      "flex gap-4 rounded-md bg-primary px-2 py-2 text-primary-foreground dark:text-foreground",
-                      {
-                        "self-start bg-accent text-foreground":
-                          message.author._id !== userId,
-                      },
-                    )}
-                    key={message._id}
-                  >
-                    <div>{message.content}</div>
-                    <div className="self-end text-xs">
-                      {format(message.createdAt, "kk:mm")}
+          {data &&
+            data.pages.map((group, _i) => (
+              <div key={group.messagesData.messages[0]._id}>
+                <div className="flex flex-col items-end gap-[0.1rem] whitespace-pre-wrap">
+                  {group.messagesData.messages.map((message) => (
+                    <div
+                      className={cn(
+                        "flex gap-4 rounded-md bg-primary px-2 py-2 text-primary-foreground dark:text-foreground",
+                        {
+                          "self-start bg-accent text-foreground":
+                            message.author._id !== userId,
+                        },
+                      )}
+                      key={message._id}
+                    >
+                      <div>{message.content}</div>
+                      <div className="self-end text-xs">
+                        {format(message.createdAt, "kk:mm")}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
         <div className="flex flex-col items-end gap-[0.1rem] whitespace-pre-wrap">
           {liveMessages &&
