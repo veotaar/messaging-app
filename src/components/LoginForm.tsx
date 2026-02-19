@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { Navigate, useNavigate } from "@tanstack/react-router";
+import { Navigate, useNavigate, useRouter } from "@tanstack/react-router";
 import { generatePassword } from "password-generator";
 import { useForm } from "react-hook-form";
 import {
@@ -60,13 +60,16 @@ const LoginForm = () => {
   const { setUser, setToken, isAuthenticated, setExpires, setUserId } =
     useAuth();
   const navigate = useNavigate();
+  const router = useRouter();
 
-  const handleAuthSuccess = (data: Awaited<ReturnType<typeof loginUser>>) => {
+  const handleAuthSuccess = async (
+    data: Awaited<ReturnType<typeof loginUser>>,
+  ) => {
     const token = data.jwt?.token;
     const expires = data.jwt?.expires;
     const user = data.user?.username;
     const userId = data.user?._id;
-    if (token && user && expires) {
+    if (token && user && expires && userId) {
       socket.connect();
       setToken(token);
       setUser(user);
@@ -76,9 +79,10 @@ const LoginForm = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("expires", expires.toString());
       localStorage.setItem("userId", userId);
-    }
 
-    setTimeout(() => navigate({ to: "/home/conversations" }), 0);
+      await router.invalidate();
+      navigate({ to: "/home/conversations" });
+    }
   };
 
   const {

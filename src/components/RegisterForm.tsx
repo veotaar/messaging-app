@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
+import { Navigate, useNavigate, useRouter } from "@tanstack/react-router";
 import { generatePassword } from "password-generator";
 import { useForm } from "react-hook-form";
 import {
@@ -62,6 +62,7 @@ const RegisterForm = () => {
   const { setUser, setToken, isAuthenticated, setExpires, setUserId } =
     useAuth();
   const navigate = useNavigate();
+  const router = useRouter();
   const {
     mutate: registerMutate,
     mutateAsync: registerMutateAsync,
@@ -69,12 +70,12 @@ const RegisterForm = () => {
     isError,
   } = useMutation({
     mutationFn: registerUser,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       const token = data.jwt?.token;
       const expires = data.jwt?.expires;
       const user = data.user?.username;
       const userId = data.user?._id;
-      if (token && user && expires) {
+      if (token && user && expires && userId) {
         setToken(token);
         setUser(user);
         setExpires(expires);
@@ -83,8 +84,10 @@ const RegisterForm = () => {
         localStorage.setItem("token", token);
         localStorage.setItem("expires", expires.toString());
         localStorage.setItem("userId", userId);
+
+        await router.invalidate();
+        navigate({ to: "/home/conversations" });
       }
-      setTimeout(() => navigate({ to: "/home/conversations" }), 0);
     },
     onError: (error) => {
       console.error(error);
@@ -103,7 +106,7 @@ const RegisterForm = () => {
   };
 
   if (isAuthenticated) {
-    return <p className="text-center">You are already logged in</p>;
+    return <Navigate to="/home/conversations" />;
   }
 
   return (
