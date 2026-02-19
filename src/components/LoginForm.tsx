@@ -1,10 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Navigate, useNavigate } from "@tanstack/react-router";
+import { generatePassword } from "password-generator";
 import { useForm } from "react-hook-form";
+import {
+  adjectives,
+  animals,
+  uniqueNamesGenerator,
+} from "unique-names-generator";
 import { z } from "zod";
 
-import { loginUser } from "@/api/login";
+import { loginUser, registerUser } from "@/api/login";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -23,6 +29,25 @@ const formSchema = z.object({
   password: z.string().min(8).max(64),
 });
 
+const generateGuestCredentials = async () => {
+  const baseUsername = uniqueNamesGenerator({
+    dictionaries: [adjectives, animals],
+    separator: "-",
+    length: 2,
+  });
+  const randomNumber = Math.floor(1000 + Math.random() * 9000);
+  const username = `${baseUsername}-${randomNumber}`;
+  const email = `${username}@example.com`;
+  const password = await generatePassword();
+
+  return {
+    username,
+    email,
+    password,
+    passwordConfirm: password,
+  };
+};
+
 const LoginForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -35,31 +60,34 @@ const LoginForm = () => {
   const { setUser, setToken, isAuthenticated, setExpires, setUserId } =
     useAuth();
   const navigate = useNavigate();
+
+  const handleAuthSuccess = (data: Awaited<ReturnType<typeof loginUser>>) => {
+    const token = data.jwt?.token;
+    const expires = data.jwt?.expires;
+    const user = data.user?.username;
+    const userId = data.user?._id;
+    if (token && user && expires) {
+      socket.connect();
+      setToken(token);
+      setUser(user);
+      setExpires(expires);
+      setUserId(userId);
+      localStorage.setItem("user", user);
+      localStorage.setItem("token", token);
+      localStorage.setItem("expires", expires.toString());
+      localStorage.setItem("userId", userId);
+    }
+
+    setTimeout(() => navigate({ to: "/home/conversations" }), 0);
+  };
+
   const {
     mutate: loginMutate,
     isPending,
     isError,
   } = useMutation({
     mutationFn: loginUser,
-    onSuccess: (data) => {
-      const token = data.jwt?.token;
-      const expires = data.jwt?.expires;
-      const user = data.user?.username;
-      const userId = data.user?._id;
-      if (token && user && expires) {
-        socket.connect();
-        setToken(token);
-        setUser(user);
-        setExpires(expires);
-        setUserId(userId);
-        localStorage.setItem("user", user);
-        localStorage.setItem("token", token);
-        localStorage.setItem("expires", expires.toString());
-        localStorage.setItem("userId", userId);
-      }
-
-      setTimeout(() => navigate({ to: "/home/conversations" }), 0);
-    },
+    onSuccess: handleAuthSuccess,
     onError: (error) => {
       console.error(error);
       form.resetField("password");
@@ -67,8 +95,25 @@ const LoginForm = () => {
     },
   });
 
+  const {
+    mutateAsync: registerMutateAsync,
+    isPending: isGuestPending,
+    isError: isGuestError,
+  } = useMutation({
+    mutationFn: registerUser,
+    onSuccess: handleAuthSuccess,
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     loginMutate(values);
+  };
+
+  const handleGuestLogin = async () => {
+    const guestCredentials = await generateGuestCredentials();
+    await registerMutateAsync(guestCredentials);
   };
 
   if (isAuthenticated) {
@@ -110,12 +155,22 @@ const LoginForm = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" disabled={isPending}>
-            {isPending ? "Loading..." : "Login"}
-          </Button>
+          <div className="flex gap-2">
+            <Button type="submit" disabled={isPending || isGuestPending}>
+              {isPending ? "Loading..." : "Login"}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={isPending || isGuestPending}
+              onClick={handleGuestLogin}
+            >
+              {isGuestPending ? "Creating guest..." : "Continue as Guest"}
+            </Button>
+          </div>
         </form>
       </Form>
-      {isError && (
+      {(isError || isGuestError) && (
         <p className="mx-auto mt-4 max-w-sm text-red-500">
           Something went wrong
         </p>

@@ -1,7 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
+import { generatePassword } from "password-generator";
 import { useForm } from "react-hook-form";
+import {
+  adjectives,
+  animals,
+  uniqueNamesGenerator,
+} from "unique-names-generator";
 import { z } from "zod";
 import { registerUser } from "@/api/login";
 import { Button } from "@/components/ui/button";
@@ -23,6 +29,25 @@ const formSchema = z.object({
   passwordConfirm: z.string().min(8).max(64),
 });
 
+const generateGuestCredentials = async () => {
+  const baseUsername = uniqueNamesGenerator({
+    dictionaries: [adjectives, animals],
+    separator: "-",
+    length: 2,
+  });
+  const randomNumber = Math.floor(1000 + Math.random() * 9000);
+  const username = `${baseUsername}-${randomNumber}`;
+  const email = `${username}@example.com`;
+  const password = await generatePassword();
+
+  return {
+    username,
+    email,
+    password,
+    passwordConfirm: password,
+  };
+};
+
 const RegisterForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -38,7 +63,8 @@ const RegisterForm = () => {
     useAuth();
   const navigate = useNavigate();
   const {
-    mutate: loginMutate,
+    mutate: registerMutate,
+    mutateAsync: registerMutateAsync,
     isPending,
     isError,
   } = useMutation({
@@ -68,7 +94,12 @@ const RegisterForm = () => {
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    loginMutate(values);
+    registerMutate(values);
+  };
+
+  const handleGuestRegister = async () => {
+    const guestCredentials = await generateGuestCredentials();
+    await registerMutateAsync(guestCredentials);
   };
 
   if (isAuthenticated) {
@@ -138,9 +169,19 @@ const RegisterForm = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" disabled={isPending}>
-            {isPending ? "Loading..." : "Register"}
-          </Button>
+          <div className="flex gap-2">
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Loading..." : "Register"}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={isPending}
+              onClick={handleGuestRegister}
+            >
+              Continue as Guest
+            </Button>
+          </div>
         </form>
       </Form>
       {isError && (
