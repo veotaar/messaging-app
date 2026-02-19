@@ -31,7 +31,9 @@ function Index() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
               </span>
-              <span className="text-muted-foreground">It's real-time!</span>
+              <span className="text-muted-foreground">
+                Guest login available!
+              </span>
             </div>
 
             <h1 className="bg-linear-to-r from-foreground to-foreground/70 bg-clip-text font-bold text-5xl text-transparent tracking-tight sm:text-6xl md:text-7xl">
